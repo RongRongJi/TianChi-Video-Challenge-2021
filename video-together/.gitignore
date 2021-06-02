@@ -22,3 +22,4 @@ pnpm-debug.log*
 *.sln
 *.sw?
 server.js
+src/core/data/config.js
