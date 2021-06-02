@@ -8,4 +8,4 @@ selenium-debug.log
 .idea/
 assets/uploads/
 logs/
-src/aliconfig.js
+/src/aliconfig.js
