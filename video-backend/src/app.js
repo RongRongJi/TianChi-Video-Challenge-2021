@@ -6,7 +6,7 @@ import path from 'path'
 import {
   System as SystemConfig, privateKey
 } from './config'
-import {accessKeyId, accessKeySecret} from './aliconfig'
+import access from './aliconfig'
 
 import errorHandler from './middleware/exception-handler'
 import routerLoader from './router-loader'
@@ -22,8 +22,8 @@ const env = process.env.NODE_ENV || 'development' // Current mode
 const vodClient = (function initVodClient() {
   var regionId = 'cn-shanghai';   // 点播服务接入区域
   var client = new RPCClient({
-      accessKeyId: accessKeyId,
-      accessKeySecret: accessKeyId,
+      accessKeyId: access.accessKeyId,
+      accessKeySecret: access.accessKeySecret,
       endpoint: 'http://vod.' + regionId + '.aliyuncs.com',
       apiVersion: '2017-03-21'
   });
