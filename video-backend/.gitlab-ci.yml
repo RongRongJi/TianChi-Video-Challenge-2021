@@ -1,0 +1,11 @@
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+stages:
+  - deploy
+build_deploy:
+  stage: deploy
+  script:
+  - sh ci.sh
