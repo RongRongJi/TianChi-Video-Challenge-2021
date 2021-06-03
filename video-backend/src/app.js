@@ -73,8 +73,42 @@ app
   .use(routerLoader())
 
 
-app.listen(SystemConfig.API_server_port)
+
 
 console.log('Now start API server on port ' + SystemConfig.API_server_port + '...')
 
+const server = require('http').createServer(app.callback())
+var io = require('socket.io')(server)
+var video_id = {}
+
+io.on('connection', function(socket){
+  console.log('server socket connect')
+
+  socket.on('join', function(msg){
+    socket.join(msg['room'])
+    if (msg['id'] ==undefined){
+      video_id[msg['room']] = msg['id']
+      io.emit('my_response', {'data': msg['room']})
+    }else if(video_id[msg['room']] !=undefined){
+      io.emit('my_response',{'err':1, 'id':video_id[msg['room']]})
+    }else{
+      io.emit('my_resposne',{'err':0})
+    }
+  })
+
+  socket.on('video_seeking', function(msg){
+    io.to(msg['room']).emit('seeking_response',
+      {'time':msg['time'], 'uid':msg['uid']})
+  })
+
+  socket.on('video_play', function(msg){
+    io.to(msg['room']).emit('play_response',{'uid':msg['uid']})
+  })
+
+  socket.on('video_pause', function(msg){
+    io.to(msg['room']).emit('pause_response',{'uid':msg['uid']})
+  })
+})
+
+app.listen(SystemConfig.API_server_port)
 export default app

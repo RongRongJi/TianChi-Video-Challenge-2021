@@ -12,10 +12,6 @@ import { io } from "socket.io-client";
 import 'aliyun-webrtc-sdk'
 
 let url = "http://localhost:5000/";
-try {
-  url = require("../server.js");
-} catch (e) {
-}
 
 Vue.use(ElementUI);
 Vue.use(VideoPlayer);
