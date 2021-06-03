@@ -49,7 +49,7 @@ app
     // 
     ctx.vodClient = vodClient
 
-    ctx.set('Access-Control-Allow-Origin', ctx.get('Origin'))
+    ctx.set('Access-Control-Allow-Origin', '*')
     ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,Authorization')
     ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS,PATCH')
     ctx.set('Access-Control-Allow-Credentials', true) // 允许带上 cookie
@@ -77,8 +77,13 @@ app
 
 console.log('Now start API server on port ' + SystemConfig.API_server_port + '...')
 
-const server = require('http').createServer(app.callback())
-var io = require('socket.io')(server)
+const options = {
+key: require('fs').readFileSync("../cert/server.key", "utf8"),
+cert: require('fs').readFileSync("../cert/server.cert", "utf8")
+};
+
+const server = require('https').createServer(options,app.callback())
+var io = require("socket.io")(server, { cors: true });
 var video_id = {}
 
 io.on('connection', function(socket){
@@ -110,5 +115,9 @@ io.on('connection', function(socket){
   })
 })
 
-app.listen(SystemConfig.API_server_port)
+// app.listen()
+
+server.listen(SystemConfig.API_server_port, () => {
+    console.log('listening on *:5000');
+});
 export default app

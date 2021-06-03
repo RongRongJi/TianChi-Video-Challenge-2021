@@ -1717,6 +1717,13 @@
   "resolved" "https://registry.npm.taobao.org/binary-extensions/download/binary-extensions-2.2.0.tgz?cache=0&sync_timestamp=1610299268308&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbinary-extensions%2Fdownload%2Fbinary-extensions-2.2.0.tgz"
   "version" "2.2.0"
 
+"bindings@^1.5.0":
+  "integrity" "sha1-EDU8npRTNLwFEabZCzj7x8nFBN8="
+  "resolved" "https://registry.npm.taobao.org/bindings/download/bindings-1.5.0.tgz"
+  "version" "1.5.0"
+  dependencies:
+    "file-uri-to-path" "1.0.0"
+
 "boxen@^4.2.0":
   "integrity" "sha1-5BG2I1fW1tNlh8isPV2XTaoHDmQ="
   "resolved" "https://registry.npm.taobao.org/boxen/download/boxen-4.2.0.tgz?cache=0&sync_timestamp=1609220927375&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fboxen%2Fdownload%2Fboxen-4.2.0.tgz"
@@ -2802,6 +2809,11 @@
   dependencies:
     "bser" "2.1.1"
 
+"file-uri-to-path@1.0.0":
+  "integrity" "sha1-VTp7hEb/b2hDWcRF8eN6BdrMM90="
+  "resolved" "https://registry.npm.taobao.org/file-uri-to-path/download/file-uri-to-path-1.0.0.tgz"
+  "version" "1.0.0"
+
 "fill-range@^4.0.0":
   "integrity" "sha1-1USBHUKPmOsGpj3EAtJAPDKMOPc="
   "resolved" "https://registry.npm.taobao.org/fill-range/download/fill-range-4.0.0.tgz"
@@ -2963,6 +2975,19 @@
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
   "resolved" "https://registry.npm.taobao.org/fs.realpath/download/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
+
+"fsevents@^1.2.7":
+  "integrity" "sha1-8yXLBFVZJCi88Rs4M3DvcOO/zDg="
+  "resolved" "https://registry.npm.taobao.org/fsevents/download/fsevents-1.2.13.tgz"
+  "version" "1.2.13"
+  dependencies:
+    "bindings" "^1.5.0"
+    "nan" "^2.12.1"
+
+"fsevents@^2.1.2", "fsevents@~2.3.1":
+  "integrity" "sha1-ilJveLj99GI7cJ4Ll1xSwkwC/Ro="
+  "resolved" "https://registry.npm.taobao.org/fsevents/download/fsevents-2.3.2.tgz"
+  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "integrity" "sha1-pWiZ0+o8m6uHS7l3O3xe3pL0iV0="
@@ -4753,6 +4778,11 @@
     "any-promise" "^1.0.0"
     "object-assign" "^4.0.1"
     "thenify-all" "^1.0.0"
+
+"nan@^2.12.1":
+  "integrity" "sha1-9TdkAGlRaPTMaUrJOT0MlYXu6hk="
+  "resolved" "https://registry.npm.taobao.org/nan/download/nan-2.14.2.tgz?cache=0&sync_timestamp=1602591709094&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnan%2Fdownload%2Fnan-2.14.2.tgz"
+  "version" "2.14.2"
 
 "nanomatch@^1.2.9":
   "integrity" "sha1-uHqKpPwN6P5r6IiVs4mD/yZb0Rk="

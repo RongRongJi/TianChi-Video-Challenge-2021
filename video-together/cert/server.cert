@@ -1,24 +1,4 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
-import VideoPlayer from "vue-video-player";
-require("video.js/dist/video-js.css");
-require("vue-video-player/src/custom-theme.css");
-import Axios from "axios";
-import ChatView from "./components/chat/chat.vue";
-import { io } from "socket.io-client";
-import 'aliyun-webrtc-sdk'
-
-let url = "https://localhost:5000/";
-
-Vue.use(ElementUI);
-Vue.use(VideoPlayer);
-Vue.component("ChatView", ChatView);
-Vue.config.productionTip = false;
-
-const tls = `-----BEGIN CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
 MIIDazCCAlOgAwIBAgIUFWoZj0kzesb4mEMtjBVAWLOfzAgwDQYJKoZIhvcNAQEL
 BQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM
 GEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAeFw0yMTA2MDMxNDEyNDBaFw0yMTA3
@@ -39,12 +19,3 @@ Hr8zjTlXnVRlUjhBb47HCz3+HRvjRHyja9VK/7Dnoo1+Gnw6WqUdOBAvB7X67rRl
 Dxk0WHKwOoWEbpjz3hLOfdYRDmu6aIc8FryxvvUHseEkgQ7NKQrpumLeqBE02Zpl
 D3hlhGVZ1UeDJEuMAMPD
 -----END CERTIFICATE-----
-`;
-
-var socket = io(url, { ca: tls });
-Vue.prototype.$socketio = socket;
-
-new Vue({
-  router,
-  render: (h) => h(App),
-}).$mount("#app");
