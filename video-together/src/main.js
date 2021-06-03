@@ -11,18 +11,12 @@ import ChatView from "./components/chat/chat.vue";
 import { io } from "socket.io-client";
 import 'aliyun-webrtc-sdk'
 
-let url = "http://localhost:5000/";
-try {
-  url = require("../server.js");
-} catch (e) {
-}
-
 Vue.use(ElementUI);
 Vue.use(VideoPlayer);
 Vue.component("ChatView", ChatView);
 Vue.config.productionTip = false;
 
-var socket = io(url);
+var socket = io("/");
 Vue.prototype.$socketio = socket;
 
 new Vue({

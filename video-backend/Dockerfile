@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:lts-alpine
 
 ENV EXPOSE_PORT 3000
 ENV TZ=Asia/Shanghai
