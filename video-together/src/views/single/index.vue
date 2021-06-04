@@ -20,7 +20,6 @@
         <div class="video_chat">
           <div class="video">
             <VideoPage
-              v-if="videoNow"
               :src="src"
               :content="content"
               :uid="this.localUid"
@@ -152,20 +151,13 @@ export default {
       type: [],
       name: "",
       img: "",
-      content: "",
+      content: {},
       chatHeight: 0,
-      videoNow: false,
       popover_visible: false,
       userList: [],
     };
   },
   mounted() {
-    // 这段不能删
-    let that = this;
-    setTimeout(function () {
-      that.videoNow = true;
-    }, 500);
-
     // 获取后台数据
     window.self = this;
     axios
