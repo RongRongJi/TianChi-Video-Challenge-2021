@@ -98,7 +98,7 @@
             </div>
           </div>
         </div>
-        <div class="title">网易游戏</div>
+        <div class="title">热门游戏</div>
         <div class="container">
           <div
             v-for="item in containerData.game_list"
