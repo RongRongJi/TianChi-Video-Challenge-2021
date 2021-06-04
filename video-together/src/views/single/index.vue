@@ -20,7 +20,6 @@
         <div class="video_chat">
           <div class="video">
             <VideoPage
-              v-if="videoNow"
               :src="src"
               :content="content"
               :uid="this.localUid"
@@ -90,13 +89,17 @@
               @click="stopOrOpenVideo"
             ></el-button>
           </div>
-          <div>
-          <!--画面div-->
-          <video class="main-window" :id="userId" ref='large'></video>
-          <!--对方画面div-->
-          <div v-for="(v) in userList" :key="v.userId">
-            <video class="main-window" :id="v.userId" ref='small'></video>
-          </div>
+          <div class="videochat-window">
+            <!--画面div-->
+            <video class="main-window" :id="userId" ref="large"></video>
+            <!--对方画面div-->
+            <video
+              class="main-window"
+              v-for="v in userList"
+              :key="v.userId"
+              :id="v.userId"
+              ref="small"
+            ></video>
           </div>
           <ChatView
             :uid="this.localUid"
@@ -108,9 +111,8 @@
   </el-container>
 </template>
 <script>
-
-import RTCClient from '../../core/rtc-client'
-import Util from '../../core/util/utils'
+import RTCClient from "../../core/rtc-client";
+import Util from "../../core/util/utils";
 import { message } from "../../components/message";
 import { getToken } from "../../common";
 import VideoPage from "../video/index.vue";
@@ -119,17 +121,14 @@ import axios from "axios";
 export default {
   name: "single",
   components: { VideoPage },
-  created(){
-      let arr = [
-          './sha256.js'
-      ]
-      arr.map((item)=>{
-          let script = document.createElement('script')
-          script.type = 'text/javascript'
-          script.src = item
-          document.getElementsByTagName('body')[0].appendChild(script)
-      })
-            
+  created() {
+    let arr = ["./sha256.js"];
+    arr.map((item) => {
+      let script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = item;
+      document.getElementsByTagName("body")[0].appendChild(script);
+    });
   },
   data() {
     return {
@@ -141,7 +140,7 @@ export default {
       desc: "等待对方进入...",
       audio: true,
       video: true,
-      userId:null,// userId
+      userId: null, // userId
       client: null,
       localUid: Math.ceil(Math.random() * 1e5),
       localStream: null,
@@ -152,20 +151,13 @@ export default {
       type: [],
       name: "",
       img: "",
-      content: "",
+      content: {},
       chatHeight: 0,
-      videoNow: false,
       popover_visible: false,
-      userList:[],
+      userList: [],
     };
   },
   mounted() {
-    // 这段不能删
-    let that = this;
-    setTimeout(function () {
-      that.videoNow = true;
-    }, 500);
-
     // 获取后台数据
     window.self = this;
     axios
@@ -181,15 +173,13 @@ export default {
     console.warn("初始化音视频sdk");
 
     this.$nextTick(() => {
-        window.rtcClient = RTCClient.instance;
-        this.init();
-    });  
-
-
+      window.rtcClient = RTCClient.instance;
+      this.init();
+    });
   },
   destroyed() {
     try {
-      this.goBack()
+      this.goBack();
     } catch (e) {
       // 为了兼容低版本，用try catch包裹一下
     }
@@ -212,25 +202,31 @@ export default {
     init() {
       this.registerCallBack();
       RTCClient.instance.setAutoPublishSubscribe(true, true);
-      RTCClient.instance.login(this.room, this.localUid).then(userId => {
-        if (RTCClient.instance.getRoomUserList().length === 0) {
-          this.$message("你可以将房间码发给其他人");
-        }
-        this.isSwitchScreen = false
-        this.userId = userId
-        this.isPublish = true
-                   
-      }).then(res =>{
-        console.log('userId: ', this.userId)
-        console.log(document.getElementById(this.userId))
-        Util.startPreview(document.getElementById(this.userId)).then(re => {
-        RTCClient.instance.setDisplayLocalVideo(document.getElementById("localVideo"), 1)
-       });
-      }).catch(err => {
-        this.$message(err.message);
-      })
+      RTCClient.instance
+        .login(this.room, this.localUid)
+        .then((userId) => {
+          if (RTCClient.instance.getRoomUserList().length === 0) {
+            this.$message("你可以将房间码发给其他人");
+          }
+          this.isSwitchScreen = false;
+          this.userId = userId;
+          this.isPublish = true;
+        })
+        .then((res) => {
+          console.log("userId: ", this.userId);
+          console.log(document.getElementById(this.userId));
+          Util.startPreview(document.getElementById(this.userId)).then((re) => {
+            RTCClient.instance.setDisplayLocalVideo(
+              document.getElementById("localVideo"),
+              1
+            );
+          });
+        })
+        .catch((err) => {
+          this.$message(err.message);
+        });
     },
-     // 注册回调
+    // 注册回调
     registerCallBack() {
       RTCClient.instance.registerCallBack((eventName, data) => {
         switch (eventName) {
@@ -238,13 +234,17 @@ export default {
           case "onPublisher":
           case "onUnPublisher":
           case "onNotify":
-            this.userList = RTCClient.instance.getRoomUserList()
+            this.userList = RTCClient.instance.getRoomUserList();
             break;
           case "onSubscribeResult":
             //Util.showRemoteVideo(data);
-            console.log("showRemote: ", data.userId)
+            console.log("showRemote: ", data.userId);
             let video = document.getElementById(data.userId);
-            RTCClient.instance.setDisplayRemoteVideo(data.userId, video, data.code);
+            RTCClient.instance.setDisplayRemoteVideo(
+              data.userId,
+              video,
+              data.code
+            );
             break;
           case "onUserVideoMuted":
             break;
@@ -257,27 +257,29 @@ export default {
             Util.onByeMessage(data);
             break;
           case "onLeave":
-            this.userList = RTCClient.instance.getRoomUserList()
+            this.userList = RTCClient.instance.getRoomUserList();
             break;
-          }
+        }
       });
     },
     goBack() {
       RTCClient.instance
         .logout()
-        .then(() => { }).catch(err => { }).then(() => {
-          this.isPublishScreen = false
-          this.isPublish = false
-          this.isPreview = RTCClient.instance.isPreview
+        .then(() => {})
+        .catch((err) => {})
+        .then(() => {
+          this.isPublishScreen = false;
+          this.isPublish = false;
+          this.isPreview = RTCClient.instance.isPreview;
         });
-          this.if_room=false;
-          this.returnJoin(1)
+      this.if_room = false;
+      this.returnJoin(1);
     },
     // 控制本地麦克风采集
     muteLocalMic() {
       if (!this.isPublish) {
         this.$message("未推流");
-        return
+        return;
       }
       RTCClient.instance.muteLocalMic(!this.audio);
       this.audio = !this.audio;
@@ -285,23 +287,27 @@ export default {
     setOrRelieveSilence() {
       const { isSilence } = this;
       this.isSilence = !isSilence;
-      this.muteLocalMic()
+      this.muteLocalMic();
     },
     stopOrOpenVideo() {
       const { isStop } = this;
       this.isStop = !isStop;
-      this.muteLocalCamera()
+      this.muteLocalCamera();
     },
     // 摄像头禁止
     muteLocalCamera() {
       if (!this.isPublish) {
         this.$message("未推流");
-        return
+        return;
       }
-      RTCClient.instance.muteLocalCamera(document.getElementById(RTCClient.instance.userId)).then(re=>{
-        RTCClient.instance.setDisplayLocalVideo(document.getElementById(RTCClient.instance.userId));
-      })
-        this.video = !this.video;
+      RTCClient.instance
+        .muteLocalCamera(document.getElementById(RTCClient.instance.userId))
+        .then((re) => {
+          RTCClient.instance.setDisplayLocalVideo(
+            document.getElementById(RTCClient.instance.userId)
+          );
+        });
+      this.video = !this.video;
     },
   },
 };
@@ -355,7 +361,7 @@ export default {
 
 .videochat-window {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 
   .main-window {
     width: 100%;

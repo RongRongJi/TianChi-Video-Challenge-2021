@@ -5,6 +5,7 @@
       ref="videoPlayer"
       :playsinline="true"
       :options="playerOptions"
+      @ready="playerReadied"
     ></video-player>
   </div>
 </template>
@@ -51,70 +52,77 @@ export default {
       localUid: this.uid,
     };
   },
-  mounted() {
-    let socket = this.$socketio;
-    let channel = this.$route.query.channelName;
-    let player = this.$refs.videoPlayer.player;
-    let _this = this;
-    console.log("why not?", socket, player, this.lock);
-    // 进度条跳转
-    socket.on("seeking_response", function (msg, cb) {
-      if (msg.uid == _this.localUid) return;
-      _this.lock = true;
-      player.currentTime(msg.time);
-      setTimeout(function () {
-        _this.lock = false;
-      }, 500);
-    });
-    player.on("seeking", function () {
-      if (_this.lock) return;
-      let time = this.currentTime();
-      console.log("video_seeking", time);
-      socket.emit("video_seeking", {
-        room: channel,
-        time: time,
-        uid: _this.localUid,
-      });
-    });
-
-    // 播放
-    socket.on("play_response", function (msg, cb) {
-      if (msg.uid == _this.localUid) return;
-      _this.lock = true;
-      player.play();
-      setTimeout(function () {
-        _this.lock = false;
-      }, 500);
-    });
-    player.on("play", function () {
-      if (_this.lock) return;
-      socket.emit("video_play", { room: channel, uid: _this.localUid });
-    });
-    // 暂停
-    socket.on("pause_response", function (msg, cb) {
-      if (msg.uid == _this.localUid) return;
-      _this.lock = true;
-      player.pause();
-      setTimeout(function () {
-        _this.lock = false;
-      }, 500);
-    });
-    player.on("pause", function () {
-      if (_this.lock) return;
-      console.log("video_pause");
-      socket.emit("video_pause", { room: channel, uid: _this.localUid });
-    });
-  },
+  mounted() {},
   watch: {
     src: {
       handler: function (newval, oldval) {
-        axios
-        .get('server/api/videos?name='+newval)
-        .then((res)=>{
-          this.playerOptions.sources[0].src = res.data.playInfo.PlayInfoList.PlayInfo[0].PlayURL 
-        })
+        if (newval === "") {
+          console.log("newval", newval);
+          return;
+        }
+        axios.get("server/api/videos?name=" + newval).then((res) => {
+          console.log(res.data);
+          this.playerOptions.sources[0].src =
+            res.data.playInfo.PlayInfoList.PlayInfo[0].PlayURL;
+        });
       },
       immediate: true,
+    },
+  },
+  methods: {
+    playerReadied(player) {
+      let socket = this.$socketio;
+      let channel = this.$route.query.channelName;
+      let _this = this;
+      console.log("why not?", socket, player, this.lock);
+      // 进度条跳转
+      socket.on("seeking_response", function (msg, cb) {
+        if (msg.uid == _this.localUid) return;
+        _this.lock = true;
+        player.currentTime(msg.time);
+        setTimeout(function () {
+          _this.lock = false;
+        }, 500);
+      });
+      player.on("seeking", function () {
+        if (_this.lock) return;
+        let time = this.currentTime();
+        console.log("video_seeking", time);
+        socket.emit("video_seeking", {
+          room: channel,
+          time: time,
+          uid: _this.localUid,
+        });
+      });
+
+      // 播放
+      socket.on("play_response", function (msg, cb) {
+        if (msg.uid == _this.localUid) return;
+        _this.lock = true;
+        player.play();
+        setTimeout(function () {
+          _this.lock = false;
+        }, 500);
+      });
+      player.on("play", function () {
+        if (_this.lock) return;
+
+        socket.emit("video_play", { room: channel, uid: _this.localUid });
+      });
+      // 暂停
+      socket.on("pause_response", function (msg, cb) {
+        if (msg.uid == _this.localUid) return;
+        _this.lock = true;
+        player.pause();
+        setTimeout(function () {
+          _this.lock = false;
+        }, 500);
+      });
+      player.on("pause", function () {
+        if (_this.lock) return;
+        console.log("video_pause");
+        socket.emit("video_pause", { room: channel, uid: _this.localUid });
+      });
     },
   },
 };
