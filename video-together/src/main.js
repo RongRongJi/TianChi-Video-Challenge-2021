@@ -11,8 +11,6 @@ import ChatView from "./components/chat/chat.vue";
 import { io } from "socket.io-client";
 import 'aliyun-webrtc-sdk'
 
-let url = "https://localhost:5000/";
-
 Vue.use(ElementUI);
 Vue.use(VideoPlayer);
 Vue.component("ChatView", ChatView);
@@ -41,7 +39,7 @@ D3hlhGVZ1UeDJEuMAMPD
 -----END CERTIFICATE-----
 `;
 
-var socket = io(url, { ca: tls });
+var socket = io("/", { ca: tls });
 Vue.prototype.$socketio = socket;
 
 new Vue({
