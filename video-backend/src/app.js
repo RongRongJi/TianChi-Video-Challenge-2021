@@ -49,7 +49,7 @@ app
     // 
     ctx.vodClient = vodClient
 
-    ctx.set('Access-Control-Allow-Origin', ctx.get('Origin'))
+    ctx.set('Access-Control-Allow-Origin', '*')
     ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,Authorization')
     ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS,PATCH')
     ctx.set('Access-Control-Allow-Credentials', true) // 允许带上 cookie
@@ -73,8 +73,52 @@ app
   .use(routerLoader())
 
 
-app.listen(SystemConfig.API_server_port)
+
 
 console.log('Now start API server on port ' + SystemConfig.API_server_port + '...')
 
+const options = {
+key: require('fs').readFileSync(path.join(__dirname, "../cert/server.key"), "utf8"),
+cert: require('fs').readFileSync(path.join(__dirname, "../cert/server.cert"), "utf8")
+};
+
+const server = require('https').createServer(options,app.callback())
+var io = require("socket.io")(server, { cors: true });
+var video_id = {}
+
+io.on('connection', function(socket){
+  console.log('server socket connect')
+
+  socket.on('join', function(msg){
+    socket.join(msg['room'])
+    console.log(msg)
+    if (msg['id'] != undefined){
+      video_id[msg['room']] = msg['id']
+      io.emit('my_response', {'data': msg['room']})
+    }else if(video_id[msg['room']] !=undefined){
+      io.emit("id_response", { err: 1, id: video_id[msg["room"]] });
+    }else{
+      io.emit("id_response", { err: 0 });
+    }
+  })
+
+  socket.on('video_seeking', function(msg){
+    io.to(msg['room']).emit('seeking_response',
+      {'time':msg['time'], 'uid':msg['uid']})
+  })
+
+  socket.on('video_play', function(msg){
+    io.to(msg['room']).emit('play_response',{'uid':msg['uid']})
+  })
+
+  socket.on('video_pause', function(msg){
+    io.to(msg['room']).emit('pause_response',{'uid':msg['uid']})
+  })
+})
+
+// app.listen()
+
+server.listen(SystemConfig.API_server_port, () => {
+    console.log('listening on *:5000');
+});
 export default app
