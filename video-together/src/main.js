@@ -39,7 +39,8 @@ D3hlhGVZ1UeDJEuMAMPD
 -----END CERTIFICATE-----
 `;
 
-var socket = io("/", { ca: tls });
+
+var socket = io("https://localhost:5000", { ca: tls });
 Vue.prototype.$socketio = socket;
 
 new Vue({

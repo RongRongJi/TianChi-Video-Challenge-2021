@@ -77,6 +77,7 @@ export default {
         time: Date.now(),
         text: this.textarea,
       });
+      this.textarea = ""
     },
   },
 };

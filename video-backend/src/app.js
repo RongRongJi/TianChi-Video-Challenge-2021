@@ -114,6 +114,11 @@ io.on('connection', function(socket){
   socket.on('video_pause', function(msg){
     io.to(msg['room']).emit('pause_response',{'uid':msg['uid']})
   })
+
+  socket.on('chat message', function(msg){
+    io.to(msg['room']).emit('chat message',
+    {'uid':msg['uid'], 'time':msg['time'], 'text':msg['text']})
+  })
 })
 
 // app.listen()
