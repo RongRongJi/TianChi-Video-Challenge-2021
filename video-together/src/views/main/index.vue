@@ -20,9 +20,10 @@
     <el-container>
       <el-aside width="auto">
         <div class="recommend-aside">
-          <el-button @click="dialogOpen = true">共享影片</el-button>
+          <div style="height:20px"></div>
+          <el-button @click="dialogOpen = true"  type="primary" plain>共享影院</el-button>
 
-          <el-dialog title="共享影片" :visible.sync="dialogOpen">
+          <el-dialog title="共享影院" :visible.sync="dialogOpen">
             <UploadView></UploadView>
           </el-dialog>
 

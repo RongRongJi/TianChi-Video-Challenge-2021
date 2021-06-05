@@ -1,17 +1,38 @@
 <template>
   <div>
     <div class="upload">
+         <el-alert
+            title="共享影院功能说明"
+            type="info"
+            :closable="false"
+            description="您可以上传自己的视频（目前仅支持mp4格式），创建全新的观影房间，并邀请好友共同观看。"
+            show-icon>
+        </el-alert>
+        <el-upload
+            class="upload-demo"
+            drag
+            action=""
+            accept="mp4"
+            :limit="1"
+            :before-upload="beforeUpload"
+            :http-request="authUpload"
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        </el-upload>
+        <el-progress :text-inside="true" :stroke-width="15" :percentage="authProgress"
+         :status="authProgress==100?'success':null" 
+         v-show="authProgress!=0"
+        ></el-progress>
       <div>
-        <input type="file" id="fileUpload" @change="fileChange($event)">
-        <label class="status">上传状态: <span>{{statusText}}</span></label>
+        <!-- <label class="status">上传状态: <span>{{statusText}}</span></label> -->
       </div>
+      <el-divider></el-divider>
       <div class="upload-type">
-        上传方式一, 使用 UploadAuth 上传:
-        <button @click="authUpload" :disabled="uploadDisabled">开始上传</button>
+        <!-- <button @click="authUpload" :disabled="uploadDisabled">开始上传</button>
         <button @click="pauseUpload" :disabled="pauseDisabled">暂停</button>
-        <button :disabled="resumeDisabled" @click="resumeUpload">恢复上传</button>
-        <button @click="createSingle">进入房间</button>
-        <span class="progress">上传进度: <i id="auth-progress">{{authProgress}}</i> %</span>
+        <button :disabled="resumeDisabled" @click="resumeUpload">恢复上传</button> -->
+        <el-button type="primary"  @click="createSingle" :disabled="createRoomDisabled">进入房间</el-button>
       </div>
     </div>
   </div>
@@ -37,6 +58,7 @@ export default {
       uploadDisabled: true,
       resumeDisabled: true,
       pauseDisabled: true,
+      createRoomDisabled: true,
       uploader: null,
       statusText: '',
       videoId: '',
@@ -59,7 +81,7 @@ export default {
         createSingle(){
             let channelName = Math.random().toFixed(5).slice(-5);
             let videoId = this.videoId
-            videoId = '98c9edcd1cd94f62a0c5dc6d290cfa34'
+            //videoId = '98c9edcd1cd94f62a0c5dc6d290cfa34'
             // 连接同步视频socket
             let socket = this.$socketio;
             this.$socketio.on("my_response", function (msg, cb) {
@@ -91,6 +113,23 @@ export default {
         this.uploadDisabled = false
         this.pauseDisabled = true
         this.resumeDisabled = true
+      },
+      beforeUpload(file){
+        this.file = file
+        var userData = '{"Vod":{}}'
+        if (this.uploader) {
+          this.uploader.stopUpload()
+          this.authProgress = 0
+          this.statusText = ""
+        }
+        this.uploader = this.createUploader()
+        this.uploader.addFile(this.file, null, null, null, userData)
+        this.uploadDisabled = false
+        this.pauseDisabled = true
+        this.resumeDisabled = true
+      },
+      handlePreview(file, fileList){
+          console.log(file, fileList)
       },
       authUpload () {
         // 然后调用 startUpload 方法, 开始上传
@@ -145,8 +184,8 @@ export default {
             axios
                 .get("/server/api/createUpload",{
                   params:{
-                      FileName: this.file.name,
-                      Title: this.file.name}
+                      FileName: self.file.name,
+                      Title: self.file.name}
               })
                 .then((res) => {
                     let uploadAuth = res.data.UploadAuth
@@ -174,6 +213,7 @@ export default {
           onUploadSucceed: function (uploadInfo) {
             console.log("onUploadSucceed: " + uploadInfo.file.name + ", endpoint:" + uploadInfo.endpoint + ", bucket:" + uploadInfo.bucket + ", object:" + uploadInfo.object)
             self.statusText = '文件上传成功!'
+            self.createRoomDisabled = false
           },
           // 文件上传失败
           onUploadFailed: function (uploadInfo, code, message) {
@@ -219,4 +259,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.upload-demo{
+    width:100%
+}
 </style>

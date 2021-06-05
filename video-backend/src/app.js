@@ -92,6 +92,7 @@ io.on('connection', function(socket){
   socket.on('join', function(msg){
     socket.join(msg['room'])
     console.log(msg)
+    console.log(video_id)
     if (msg['id'] != undefined){  // 创建一个id房间
       video_id[msg['room']] = {'id': msg['id']}
       io.emit('my_response', {'data': msg['room']})
