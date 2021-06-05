@@ -119,7 +119,7 @@ import VideoPage from "../video/index.vue";
 import axios from "axios";
 
 export default {
-  name: "single",
+  name: "TpSingle",
   components: { VideoPage },
   created() {
     let arr = ["./sha256.js"];

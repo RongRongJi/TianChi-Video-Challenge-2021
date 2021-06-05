@@ -63,7 +63,7 @@ export default {
         axios.get("server/api/videos?name=" + newval).then((res) => {
           console.log(res.data);
           this.playerOptions.sources[0].src =
-            res.data.playInfo.PlayInfoList.PlayInfo[0].PlayURL;
+            res.data.PlayInfoList.PlayInfo[0].PlayURL;
         });
       },
       immediate: true,

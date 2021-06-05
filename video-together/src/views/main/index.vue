@@ -20,6 +20,13 @@
     <el-container>
       <el-aside width="auto">
         <div class="recommend-aside">
+          <el-button @click="dialogOpen = true">共享影片</el-button>
+
+          <el-dialog title="共享影片" :visible.sync="dialogOpen">
+            <UploadView></UploadView>
+          </el-dialog>
+
+          <el-divider></el-divider>
           <div><p>猜你想聊</p></div>
           <div v-for="item in recommend" :key="item.id">
             <div class="user">
@@ -130,9 +137,11 @@
 <script>
 import axios from "axios";
 import { message } from "../../components/message";
+import UploadView from './upload'
 
 export default {
   name: "main",
+  components:{UploadView},
   data() {
     return {
       carouselData: [],
@@ -140,6 +149,8 @@ export default {
       channelName: "",
       visiableSwitcher: true,
       recommend: [],
+
+      dialogOpen: false
     };
   },
   mounted() {
