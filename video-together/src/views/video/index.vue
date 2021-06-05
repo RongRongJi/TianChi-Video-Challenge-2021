@@ -22,7 +22,7 @@ export default {
     },
     content: {
       type: Object,
-      required: true,
+      required: false,
     },
     uid: {
       type: Number,

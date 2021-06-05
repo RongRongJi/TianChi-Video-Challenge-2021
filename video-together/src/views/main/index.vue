@@ -176,11 +176,11 @@ export default {
       this.$socketio.on("my_response", function (msg, cb) {
         console.log("socket_response", msg);
       });
-      this.$socketio.emit("join", { room: channelName, id: id });
+      this.$socketio.emit("join", { room: channelName, id: id});
       const { path = "single" } = this.$route.query;
       this.$router.push({
         path: `/${path}`,
-        query: { channelName, id },
+        query: { channelName, id},
       });
     },
     joinVideoRoom(channelName) {
@@ -190,12 +190,23 @@ export default {
       this.$socketio.on("id_response", function (msg, cb) {
         console.log("id_response", msg);
         if (msg.err == 1) {
-          const { path = "single" } = that.$route.query;
-          let id = msg.id;
-          that.$router.push({
-            path: `/${path}`,
-            query: { channelName, id },
-          });
+          let data = msg.data
+          if(data['id']!=undefined){
+            let id = data.id;
+            const { path = "single" } = that.$route.query;
+            that.$router.push({
+              path: `/${path}`,
+              query: { channelName, id },
+            });
+          }else if(data['videoId']!=undefined){
+            let videoId = data.videoId
+            const { path = "private_single" } = that.$route.query;
+            that.$router.push({
+                path: `/${path}`,
+                query: { channelName, videoId },
+            });
+          }
+
         } else {
           message("当前无该房间！");
         }

@@ -58,10 +58,18 @@ export default {
   methods: {
         createSingle(){
             let channelName = Math.random().toFixed(5).slice(-5);
+            let videoId = this.videoId
+            videoId = '98c9edcd1cd94f62a0c5dc6d290cfa34'
+            // 连接同步视频socket
+            let socket = this.$socketio;
+            this.$socketio.on("my_response", function (msg, cb) {
+                console.log("socket_response", msg);
+            });
+            this.$socketio.emit("join", { room: channelName, videoId: videoId });
             const { path = "private_single" } = this.$route.query;
             this.$router.push({
                 path: `/${path}`,
-                query: { channelName, id },
+                query: { channelName, videoId },
             });
         },
         fileChange (e) {
@@ -137,8 +145,8 @@ export default {
             axios
                 .get("/server/api/createUpload",{
                   params:{
-                      FileName: "test.mp4",
-                      Title: "test" }
+                      FileName: this.file.name,
+                      Title: this.file.name}
               })
                 .then((res) => {
                     let uploadAuth = res.data.UploadAuth

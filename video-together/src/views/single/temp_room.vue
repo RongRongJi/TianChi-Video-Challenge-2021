@@ -27,33 +27,7 @@
           </div>
           <div class="intro">
             <div class="title">
-              <b>{{ content.name }}</b>
-              <el-tag v-for="t in content.type" :key="t" type="info">{{
-                t
-              }}</el-tag>
-            </div>
-            <div style="margin-bottom: 10px; margin-top: 5px">
-              <div
-                style="
-                  margin-right: 10px;
-                  font-size: 14px;
-                  font-weight: bold;
-                  margin-bottom: 5px;
-                "
-              >
-                {{ content.info }}
-              </div>
-
-              <div class="hor">
-                <el-image
-                  :src="'/server/' + content.image"
-                  style="width: 240px; height: 135px"
-                  fit="fit"
-                ></el-image>
-                <div style="flex: 1; margin-left: 10px">
-                  {{ content.content }}
-                </div>
-              </div>
+              <b>{{ title }}</b>
             </div>
           </div>
         </div>
@@ -146,7 +120,8 @@ export default {
       localStream: null,
       remoteStream: null,
       videoData: [],
-      src: "",
+      src: this.$route.query.videoId,
+      title: "",
       description: "",
       type: [],
       name: "",
@@ -160,15 +135,11 @@ export default {
   mounted() {
     // 获取后台数据
     window.self = this;
-    axios
-      .get("/server/api/videolist")
-      .then((res) => {
-        this.videoData = res.data.game_list.concat(res.data.movie_list);
-        console.log("videoData", this.videoData);
-        this.createVideoPage(this.$route.query.id);
-      })
-      .catch((err) => console.log(err));
-
+    axios.get("server/api/videos?name=" + this.src).then((res) => {
+          console.log(res.data);
+          this.title = res.data.VideoBase.Title
+        });
+    
     // 初始化音视频实例
     console.warn("初始化音视频sdk");
 
@@ -185,12 +156,6 @@ export default {
     }
   },
   methods: {
-    createVideoPage(id) {
-      console.log(id);
-      console.log(this.videoData[id - 1]);
-      this.src = this.videoData[id - 1].videoId;
-      this.content = this.videoData[id - 1];
-    },
 
     returnJoin(time = 2000) {
       setTimeout(() => {

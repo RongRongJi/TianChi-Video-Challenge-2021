@@ -92,11 +92,14 @@ io.on('connection', function(socket){
   socket.on('join', function(msg){
     socket.join(msg['room'])
     console.log(msg)
-    if (msg['id'] != undefined){
-      video_id[msg['room']] = msg['id']
+    if (msg['id'] != undefined){  // 创建一个id房间
+      video_id[msg['room']] = {'id': msg['id']}
       io.emit('my_response', {'data': msg['room']})
-    }else if(video_id[msg['room']] !=undefined){
-      io.emit("id_response", { err: 1, id: video_id[msg["room"]] });
+    }else if(video_id[msg['room']] !=undefined){  // 返回一个房间
+      io.emit("id_response", { err: 1, data: video_id[msg["room"]] });
+    }else if (msg['videoId'] != undefined){  // 创建一个video房间
+      video_id[msg['room']] = {'videoId': msg['videoId']}
+      io.emit('my_response', {'data':msg['room']})
     }else{
       io.emit("id_response", { err: 0 });
     }
