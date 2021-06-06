@@ -84,7 +84,13 @@ cert: require('fs').readFileSync(path.join(__dirname, "../cert/server.cert"), "u
 
 const server = require('https').createServer(options,app.callback())
 var io = require("socket.io")(server, { cors: true });
-var video_id = {}
+var video_id = {
+  // 增加一些测试数据
+  '11111': {id: 10},
+  '22222': {id: 7},
+  '33333': {id: 12},
+  '44444': {videoId: '98c9edcd1cd94f62a0c5dc6d290cfa34'}
+}
 
 io.on('connection', function(socket){
   console.log('server socket connect')

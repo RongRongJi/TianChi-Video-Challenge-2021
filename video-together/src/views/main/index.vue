@@ -45,7 +45,7 @@
                     <el-tag v-for="i in item.tags" :key="i" type="info">{{i}}</el-tag>
                 </div>
                 <div>ta正在看<b>《{{item.viewing}}》</b></div>
-                <div class="join-button"><el-button>加入房间</el-button></div>
+                <div class="join-button"><el-button @click="joinVideoRoom(item.room)">加入房间</el-button></div>
               </div>
             </div>
           </div>
