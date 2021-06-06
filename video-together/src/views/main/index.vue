@@ -154,6 +154,18 @@ export default {
       dialogOpen: false
     };
   },
+  created(){
+    let arr = ["./aliyun-upload-sdk/lib/es6-promise.min.js",
+      "./aliyun-upload-sdk/lib/aliyun-oss-sdk-6.13.0.min.js",
+      "./aliyun-upload-sdk/aliyun-upload-sdk-1.5.2.min.js",
+      "./sha256.js"];
+    arr.map((item) => {
+      let script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = item;
+      document.getElementsByTagName("body")[0].appendChild(script);
+    });
+  },
   mounted() {
     axios
       .get("/server/api/videolist")

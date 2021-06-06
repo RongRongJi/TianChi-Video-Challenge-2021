@@ -31,7 +31,6 @@
             </div>
             <div class="hor">
                 <el-image
-                  :v-if="image!=''"
                   :src="image"
                   style="width: 240px; height: 135px"
                   fit="fit"
@@ -136,7 +135,7 @@ export default {
       description: "",
       type: [],
       name: "",
-      image: "",
+      img: "",
       content: {},
       chatHeight: 0,
       popover_visible: false,
