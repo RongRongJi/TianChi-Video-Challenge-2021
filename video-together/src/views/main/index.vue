@@ -21,13 +21,6 @@
       <el-aside width="auto">
         <div class="recommend-aside">
           <div style="height:20px"></div>
-          <el-button @click="dialogOpen = true"  type="primary" plain>共享影院</el-button>
-
-          <el-dialog title="共享影院" :visible.sync="dialogOpen">
-            <UploadView></UploadView>
-          </el-dialog>
-
-          <el-divider></el-divider>
           <div><p>猜你想聊</p></div>
           <div v-for="item in recommend" :key="item.id">
             <div class="user">
@@ -82,8 +75,25 @@
             </el-carousel-item>
           </el-carousel>
         </div>
-        <div class="title">热门影视</div>
-        <div class="container">
+        <div class="title-row">
+          <div :class="tabIndex==1?'title-button':'title-button-normal'">
+            <el-button @click="chooseTab(1)">热门影视</el-button>
+            </div>
+          <div class="blank"></div>
+          <div :class="tabIndex==2?'title-button':'title-button-normal'">
+            <el-button @click="chooseTab(2)">热门游戏</el-button>
+            </div>
+          <div class="blank"></div>
+          <div :class="tabIndex==3?'title-button':'title-button-normal'"
+          ><el-button @click="chooseTab(3)">直播频道</el-button>
+          </div>
+          <div class="blank"></div>
+          <div :class="tabIndex==4?'title-button':'title-button-normal'"
+          ><el-button @click="chooseTab(4)">共享影院</el-button>
+          </div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="container" v-if="tabIndex==1">
           <div
             v-for="item in containerData.movie_list"
             :key="item.id"
@@ -106,8 +116,7 @@
             </div>
           </div>
         </div>
-        <div class="title">热门游戏</div>
-        <div class="container">
+        <div class="container" v-if="tabIndex==2">
           <div
             v-for="item in containerData.game_list"
             :key="item.id"
@@ -128,6 +137,11 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="upload" v-if="tabIndex==4">
+          <div class="content">
+          <UploadView></UploadView>
           </div>
         </div>
       </el-main>
@@ -151,7 +165,8 @@ export default {
       visiableSwitcher: true,
       recommend: [],
 
-      dialogOpen: false
+      // tab
+      tabIndex: 1 // 1 影视 2 游戏 3 直播 4 私人
     };
   },
   created(){
@@ -182,6 +197,9 @@ export default {
       })
   },
   methods: {
+    chooseTab(index){
+      this.tabIndex = index
+    },
     createVideoPage(id) {
       let channelName = Math.random().toFixed(5).slice(-5);
       // 连接同步视频socket
@@ -345,6 +363,43 @@ export default {
     border-radius: 8px;
   }
 }
+.title-row{
+  display: flex;
+  align-items:flex-end;
+  .title-button {
+    border-bottom: 5px solid #c5daeb;
+    button {
+      text-align: left;
+      font-size: 30px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 50px 0 10px 0;
+      align-self: center;
+      padding: 0;
+      background: none;
+      border: none;
+      color: #000000;
+    }
+  }
+
+  .title-button-normal {
+    button {
+      text-align: left;
+      font-size: 25px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 50px 0 10px 0;
+      align-self: auto;
+      padding: 0;
+      background: none;
+      border: none;
+      color: #000000;
+    }
+  }
+
+  .blank{
+    width: 30px
+  }
+}
+
 
 .title {
   font-size: 30px;
@@ -378,6 +433,20 @@ export default {
         border: none;
       }
     }
+  }
+}
+
+.upload{
+  width: 80%;
+  background-color: #ffffff;
+  align-content: center;
+  align-items: center;
+  .content{
+    width: 70%;
+    margin-top: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 10px;
   }
 }
 </style>
