@@ -29,6 +29,17 @@
             <div class="title">
               <b>{{ title }}</b>
             </div>
+            <div class="hor">
+                <el-image
+                  :v-if="image!=''"
+                  :src="image"
+                  style="width: 240px; height: 135px"
+                  fit="fit"
+                ></el-image>
+                <div style="flex: 1; margin-left: 10px">
+                  {{ }}
+                </div>
+              </div>
           </div>
         </div>
         <div class="content">
@@ -125,7 +136,7 @@ export default {
       description: "",
       type: [],
       name: "",
-      img: "",
+      image: "",
       content: {},
       chatHeight: 0,
       popover_visible: false,
@@ -138,6 +149,7 @@ export default {
     axios.get("server/api/videos?name=" + this.src).then((res) => {
           console.log(res.data);
           this.title = res.data.VideoBase.Title
+          this.image = res.data.VideoBase.CoverURL
         });
     
     // 初始化音视频实例

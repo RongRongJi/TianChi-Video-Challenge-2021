@@ -46,7 +46,8 @@
 
               <div class="hor">
                 <el-image
-                  :src="'/server/' + content.image"
+                  :v-if="img!=''"
+                  :src="img"
                   style="width: 240px; height: 135px"
                   fit="fit"
                 ></el-image>
@@ -190,8 +191,9 @@ export default {
       console.log(this.videoData[id - 1]);
       this.src = this.videoData[id - 1].videoId;
       this.content = this.videoData[id - 1];
+      this.img = '/server/' + this.content.image
+      console.log('img123', this.img)
     },
-
     returnJoin(time = 2000) {
       setTimeout(() => {
         this.$router.push({
