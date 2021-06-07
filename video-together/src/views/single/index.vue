@@ -116,12 +116,10 @@ import RTCClient from "../../core/rtc-client";
 import Util from "../../core/util/utils";
 import { message } from "../../components/message";
 import { getToken } from "../../common";
-import VideoPage from "../video/index.vue";
 import axios from "axios";
 
 export default {
   name: "single",
-  components: { VideoPage },
   created() {
     let arr = ["./sha256.js"];
     arr.map((item) => {
