@@ -91,7 +91,7 @@
             ></el-button>
           </div>
           <div class="videochat-window">
-            <CanvasView></CanvasView>
+            <CanvasView @onLoad="getLocalStream"></CanvasView>
             <!--画面div-->
             <video class="main-window" :id="userId" ref="large"></video>
             <!--对方画面div-->
@@ -101,6 +101,7 @@
               :key="v.userId"
               :id="v.userId"
               ref="small"
+              autoplay
             ></video>
           </div>
           <ChatView
@@ -171,11 +172,6 @@ export default {
 
     // 初始化音视频实例
     console.warn("初始化音视频sdk");
-
-    this.$nextTick(() => {
-      window.rtcClient = RTCClient.instance;
-      //this.init();
-    });
   },
   destroyed() {
     try {
@@ -185,6 +181,16 @@ export default {
     }
   },
   methods: {
+    getLocalStream(stream) {
+      this.$nextTick(() => {
+        console.log("get local stream", stream);
+        this.localStream = stream;
+        window.rtcClient = RTCClient.instance;
+        // this.$refs.large.srcObject = stream;
+        // console.log(this.$refs.large.srcObject);
+        this.init();
+      });
+    },
     createVideoPage(id) {
       console.log(id);
       console.log(this.videoData[id - 1]);
@@ -202,7 +208,7 @@ export default {
     },
     init() {
       this.registerCallBack();
-      RTCClient.instance.setAutoPublishSubscribe(true, true);
+      RTCClient.instance.setAutoPublishSubscribe(false, true);
       RTCClient.instance
         .login(this.room, this.localUid)
         .then((userId) => {
@@ -211,17 +217,35 @@ export default {
           }
           this.isSwitchScreen = false;
           this.userId = userId;
-          this.isPublish = true;
         })
         .then((res) => {
-          console.log("userId: ", this.userId);
-          console.log(document.getElementById(this.userId));
-          Util.startPreview(document.getElementById(this.userId)).then((re) => {
-            RTCClient.instance.setDisplayLocalVideo(
-              document.getElementById("localVideo"),
-              1
-            );
-          });
+          const tracks = this.localStream.getVideoTracks();
+          console.log(tracks);
+          RTCClient.instance
+            .setExternalMediaTrack(tracks[0], 1)
+            .then((e) => {
+              console.log("setExternalMediaTrack success", e);
+              RTCClient.instance
+                .publish()
+                .then((e) => {
+                  console.log("publish success", e);
+                  this.isPublish = true;
+                })
+                .catch((e) => {
+                  console.log("publish failed", e);
+                });
+            })
+            .catch((err) => {
+              console.log("setExternalMediaTrack failed", err);
+            });
+          // console.log("userId: ", this.userId);
+          // console.log(document.getElementById(this.userId));
+          // Util.startPreview(document.getElementById(this.userId)).then((re) => {
+          //   RTCClient.instance.setDisplayLocalVideo(
+          //     document.getElementById("localVideo"),
+          //     1
+          //   );
+          // });
         })
         .catch((err) => {
           this.$message(err.message);

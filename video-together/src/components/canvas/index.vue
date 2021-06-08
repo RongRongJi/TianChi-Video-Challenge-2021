@@ -1,6 +1,11 @@
 <template>
   <div class="canvasContainer">
-    <canvas width="600" height="600" id="jeeFaceFilterCanvas"></canvas>
+    <canvas
+      width="600"
+      height="600"
+      id="jeeFaceFilterCanvas"
+      ref="jeeFaceFilterCanvas"
+    ></canvas>
     <div id="filter"></div>
   </div>
 </template>
@@ -17,6 +22,8 @@ export default {
   mounted() {
     this.$nextTick(() => {
       CanvasRender.main();
+      const stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
+      this.$emit("onLoad", stream);
     });
   },
   methods: {},
