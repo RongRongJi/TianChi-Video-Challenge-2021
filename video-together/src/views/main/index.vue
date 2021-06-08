@@ -20,30 +20,38 @@
     <el-container>
       <el-aside width="auto">
         <div class="recommend-aside">
-          <div style="height:20px"></div>
+          <div style="height: 20px"></div>
           <div><p>猜你想聊</p></div>
           <div v-for="item in recommend" :key="item.id">
             <div class="user">
-            <div class="avatar">
-              <el-avatar
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-              ></el-avatar>
-            </div>
-            <div class="aside">
-              <div class="label">{{item.username}} <span>在线</span></div>
-              <div class="info">
-                <div>你们看过{{item.numbers}}部相同的作品</div>
-                <div>
-                  你们共同的标签 
-                    <el-tag v-for="i in item.tags" :key="i" type="info">{{i}}</el-tag>
+              <div class="avatar">
+                <el-avatar
+                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                ></el-avatar>
+              </div>
+              <div class="aside">
+                <div class="label">{{ item.username }} <span>在线</span></div>
+                <div class="info">
+                  <div>你们看过{{ item.numbers }}部相同的作品</div>
+                  <div>
+                    你们共同的标签
+                    <el-tag v-for="i in item.tags" :key="i" type="info">{{
+                      i
+                    }}</el-tag>
+                  </div>
+                  <div>
+                    ta正在看<b>《{{ item.viewing }}》</b>
+                  </div>
+                  <div class="join-button">
+                    <el-button @click="joinVideoRoom(item.room)"
+                      >加入房间</el-button
+                    >
+                  </div>
                 </div>
-                <div>ta正在看<b>《{{item.viewing}}》</b></div>
-                <div class="join-button"><el-button @click="joinVideoRoom(item.room)">加入房间</el-button></div>
               </div>
             </div>
           </div>
-          </div>
-          
+
           <div class="control">
             <el-button type="primary" icon="el-icon-refresh-right"
               >换一批</el-button
@@ -63,37 +71,44 @@
       </el-aside>
       <el-main>
         <div class="carousel">
-          <el-carousel indicator-position="outside" type="card">
+          <el-carousel
+            indicator-position="outside"
+            type="card"
+            :height="carouselHeight"
+          >
             <el-carousel-item v-for="item in carouselData" :key="item.id + 18">
-              <div>
-                <el-image fit="fit" :src="'/server/' + item.image">
-                  <div slot="placeholder" class="image-slot">
-                    加载中<span class="dot">...</span>
-                  </div></el-image
-                >
-              </div>
+              <el-image
+                fit="fill"
+                :src="'/server/' + item.image"
+                ref="carouselImage"
+                @load="carouselImageOnload"
+              >
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div></el-image
+              >
             </el-carousel-item>
           </el-carousel>
         </div>
         <div class="title-row">
-          <div :class="tabIndex==1?'title-button':'title-button-normal'">
+          <div :class="tabIndex == 1 ? 'title-button' : 'title-button-normal'">
             <el-button @click="chooseTab(1)">热门影视</el-button>
-            </div>
-          <div class="blank"></div>
-          <div :class="tabIndex==2?'title-button':'title-button-normal'">
-            <el-button @click="chooseTab(2)">热门游戏</el-button>
-            </div>
-          <div class="blank"></div>
-          <div :class="tabIndex==3?'title-button':'title-button-normal'"
-          ><el-button @click="chooseTab(3)">直播频道</el-button>
           </div>
           <div class="blank"></div>
-          <div :class="tabIndex==4?'title-button':'title-button-normal'"
-          ><el-button @click="chooseTab(4)">共享影院</el-button>
+          <div :class="tabIndex == 2 ? 'title-button' : 'title-button-normal'">
+            <el-button @click="chooseTab(2)">热门游戏</el-button>
+          </div>
+          <div class="blank"></div>
+          <div :class="tabIndex == 3 ? 'title-button' : 'title-button-normal'">
+            <el-button @click="chooseTab(3)">直播频道</el-button>
+          </div>
+          <div class="blank"></div>
+          <div :class="tabIndex == 4 ? 'title-button' : 'title-button-normal'">
+            <el-button @click="chooseTab(4)">共享影院</el-button>
           </div>
         </div>
-        <div style="height:10px"></div>
-        <div class="container" v-if="tabIndex==1">
+        <div style="height: 10px"></div>
+        <div class="container" v-if="tabIndex == 1">
           <div
             v-for="item in containerData.movie_list"
             :key="item.id"
@@ -116,7 +131,7 @@
             </div>
           </div>
         </div>
-        <div class="container" v-if="tabIndex==2">
+        <div class="container" v-if="tabIndex == 2">
           <div
             v-for="item in containerData.game_list"
             :key="item.id"
@@ -139,9 +154,9 @@
             </div>
           </div>
         </div>
-        <div class="upload" v-if="tabIndex==4">
+        <div class="upload" v-if="tabIndex == 4">
           <div class="content">
-          <UploadView></UploadView>
+            <UploadView></UploadView>
           </div>
         </div>
       </el-main>
@@ -152,11 +167,11 @@
 <script>
 import axios from "axios";
 import { message } from "../../components/message";
-import UploadView from './upload'
+import UploadView from "./upload";
 
 export default {
-  name: "main",
-  components:{UploadView},
+  name: "MainView",
+  components: { UploadView },
   data() {
     return {
       carouselData: [],
@@ -164,16 +179,19 @@ export default {
       channelName: "",
       visiableSwitcher: true,
       recommend: [],
+      carouselHeight: "200px",
 
       // tab
-      tabIndex: 1 // 1 影视 2 游戏 3 直播 4 私人
+      tabIndex: 1, // 1 影视 2 游戏 3 直播 4 私人
     };
   },
-  created(){
-    let arr = ["./aliyun-upload-sdk/lib/es6-promise.min.js",
+  created() {
+    let arr = [
+      "./aliyun-upload-sdk/lib/es6-promise.min.js",
       "./aliyun-upload-sdk/lib/aliyun-oss-sdk-6.13.0.min.js",
       "./aliyun-upload-sdk/aliyun-upload-sdk-1.5.2.min.js",
-      "./sha256.js"];
+      "./sha256.js",
+    ];
     arr.map((item) => {
       let script = document.createElement("script");
       script.type = "text/javascript";
@@ -190,15 +208,22 @@ export default {
       })
       .catch((err) => console.log(err));
 
-    axios
-      .get("/server/api/recommend")
-      .then((res) => {
-        this.recommend = res.data
-      })
+    axios.get("/server/api/recommend").then((res) => {
+      this.recommend = res.data;
+    });
+    const that = this;
+    window.addEventListener("resize", () => {
+      console.log("resize", that.$refs.carouselImage[0].$el.clientHeight);
+      that.carouselHeight = that.$refs.carouselImage[0].$el.clientHeight + "px";
+    });
   },
   methods: {
-    chooseTab(index){
-      this.tabIndex = index
+    carouselImageOnload(event) {
+      console.log("onload", event);
+      this.carouselHeight = this.$refs.carouselImage[0].$el.clientHeight + "px";
+    },
+    chooseTab(index) {
+      this.tabIndex = index;
     },
     createVideoPage(id) {
       let channelName = Math.random().toFixed(5).slice(-5);
@@ -207,11 +232,11 @@ export default {
       this.$socketio.on("my_response", function (msg, cb) {
         console.log("socket_response", msg);
       });
-      this.$socketio.emit("join", { room: channelName, id: id});
+      this.$socketio.emit("join", { room: channelName, id: id });
       const { path = "single" } = this.$route.query;
       this.$router.push({
         path: `/${path}`,
-        query: { channelName, id},
+        query: { channelName, id },
       });
     },
     joinVideoRoom(channelName) {
@@ -221,23 +246,22 @@ export default {
       this.$socketio.on("id_response", function (msg, cb) {
         console.log("id_response", msg);
         if (msg.err == 1) {
-          let data = msg.data
-          if(data['id']!=undefined){
+          let data = msg.data;
+          if (data["id"] != undefined) {
             let id = data.id;
             const { path = "single" } = that.$route.query;
             that.$router.push({
               path: `/${path}`,
               query: { channelName, id },
             });
-          }else if(data['videoId']!=undefined){
-            let videoId = data.videoId
+          } else if (data["videoId"] != undefined) {
+            let videoId = data.videoId;
             const { path = "private_single" } = that.$route.query;
             that.$router.push({
-                path: `/${path}`,
-                query: { channelName, videoId },
+              path: `/${path}`,
+              query: { channelName, videoId },
             });
           }
-
         } else {
           message("当前无该房间！");
         }
@@ -343,13 +367,13 @@ export default {
 .carousel {
   display: block;
   width: 80%;
-  min-width: 1200px;
+  //min-width: 1200px;
 
   .el-carousel__item h3 {
     color: #475669;
     font-size: 18px;
     opacity: 0.75;
-    line-height: 300px;
+    //line-height: 300px;
     margin: 0;
   }
 
@@ -363,9 +387,9 @@ export default {
     border-radius: 8px;
   }
 }
-.title-row{
+.title-row {
   display: flex;
-  align-items:flex-end;
+  align-items: flex-end;
   .title-button {
     border-bottom: 5px solid #c5daeb;
     button {
@@ -395,11 +419,10 @@ export default {
     }
   }
 
-  .blank{
-    width: 30px
+  .blank {
+    width: 30px;
   }
 }
-
 
 .title {
   font-size: 30px;
@@ -407,14 +430,14 @@ export default {
   margin: 50px 0 10px 0;
   align-self: auto;
   width: 80%;
-  min-width: 1200px;
+  //min-width: 1200px;
 }
 
 .container {
   display: flex;
   flex-wrap: wrap;
   width: 80%;
-  min-width: 1200px;
+  //min-width: 1200px;
   justify-content: space-between;
 
   .content {
@@ -436,12 +459,12 @@ export default {
   }
 }
 
-.upload{
+.upload {
   width: 80%;
   background-color: #ffffff;
   align-content: center;
   align-items: center;
-  .content{
+  .content {
     width: 70%;
     margin-top: 10px;
     margin-left: 5%;
