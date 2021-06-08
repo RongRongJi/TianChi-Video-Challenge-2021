@@ -8,12 +8,16 @@ require("video.js/dist/video-js.css");
 require("vue-video-player/src/custom-theme.css");
 import Axios from "axios";
 import ChatView from "./components/chat/chat.vue";
+import VideoPage from "./components/video/index.vue";
+import CanvasView from "./components/canvas/index.vue";
 import { io } from "socket.io-client";
-import 'aliyun-webrtc-sdk'
+import "aliyun-webrtc-sdk";
 
 Vue.use(ElementUI);
 Vue.use(VideoPlayer);
 Vue.component("ChatView", ChatView);
+Vue.component("VideoPage", VideoPage);
+Vue.component("CanvasView", CanvasView);
 Vue.config.productionTip = false;
 
 const tls = `-----BEGIN CERTIFICATE-----
@@ -38,7 +42,6 @@ Dxk0WHKwOoWEbpjz3hLOfdYRDmu6aIc8FryxvvUHseEkgQ7NKQrpumLeqBE02Zpl
 D3hlhGVZ1UeDJEuMAMPD
 -----END CERTIFICATE-----
 `;
-
 
 var socket = io("https://localhost:5000", { ca: tls });
 Vue.prototype.$socketio = socket;

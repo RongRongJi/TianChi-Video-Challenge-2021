@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import routes from "./routes";
-import Main from "../views/main/index.vue";
+import MainView from "../views/main/index.vue";
 
 Vue.use(VueRouter);
 
@@ -11,8 +11,8 @@ const router = new VueRouter({
   routes: [
     {
       path: "/",
-      name: "main",
-      component: Main,
+      name: "MainView",
+      component: MainView,
     },
   ].concat(routes),
 });
