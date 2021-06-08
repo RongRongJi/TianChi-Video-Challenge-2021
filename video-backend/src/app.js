@@ -61,7 +61,7 @@ app
 
   })
   .use(errorHandler)
-  .use(KoaStatic('assets', path.resolve(__dirname, '../assets'))) // Static resource
+  .use(KoaStatic('assets', path.resolve(__dirname, '../assets'),{'extensions':'gltf'})) // Static resource
   .use(KoaBody({
     multipart: true,
     parsedMethods: ['POST', 'PUT', 'PATCH', 'GET', 'HEAD', 'DELETE'], // parse GET, HEAD, DELETE requests

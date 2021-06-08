@@ -46,7 +46,7 @@
 
               <div class="hor">
                 <el-image
-                  :v-if="img!=''"
+                  :v-if="img != ''"
                   :src="img"
                   style="width: 240px; height: 135px"
                   fit="fit"
@@ -91,6 +91,7 @@
             ></el-button>
           </div>
           <div class="videochat-window">
+            <CanvasView></CanvasView>
             <!--画面div-->
             <video class="main-window" :id="userId" ref="large"></video>
             <!--对方画面div-->
@@ -173,7 +174,7 @@ export default {
 
     this.$nextTick(() => {
       window.rtcClient = RTCClient.instance;
-      this.init();
+      //this.init();
     });
   },
   destroyed() {
@@ -189,8 +190,8 @@ export default {
       console.log(this.videoData[id - 1]);
       this.src = this.videoData[id - 1].videoId;
       this.content = this.videoData[id - 1];
-      this.img = '/server/' + this.content.image
-      console.log('img123', this.img)
+      this.img = "/server/" + this.content.image;
+      console.log("img123", this.img);
     },
     returnJoin(time = 2000) {
       setTimeout(() => {

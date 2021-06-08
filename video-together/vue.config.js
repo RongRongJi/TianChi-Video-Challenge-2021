@@ -7,6 +7,7 @@ module.exports = {
   publicPath: "/",
   devServer: {
     port: 8020,
+    public: "http://localhost:8020",
     hot: true,
     overlay: {
       warnings: false,
@@ -16,7 +17,7 @@ module.exports = {
       key: fs.readFileSync(path.join(__dirname, "./cert/server.key")),
       cert: fs.readFileSync(path.join(__dirname, "./cert/server.cert")),
     },
-    openPage: "#/?path=main",
+    openPage: "#/?path=MainView",
     proxy: {
       "/socket.io": {
         target: "https://localhost:5000/",
