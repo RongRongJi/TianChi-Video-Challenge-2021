@@ -154,6 +154,29 @@
             </div>
           </div>
         </div>
+        <div class="container" v-if="tabIndex == 3">
+          <div
+            v-for="item in containerData.live_list"
+            :key="item.id"
+            class="content"
+          >
+            <div @click="createVideoPage(item.id)">
+              <el-image fit="fit" :src="'/server/' + item.image">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div></el-image
+              >
+              <div class="info">
+                <div>
+                  {{ item.name }}
+                  <el-tag v-for="t in item.type" :key="t" type="info">{{
+                    t
+                  }}</el-tag>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="upload" v-if="tabIndex == 4">
           <div class="content">
             <UploadView></UploadView>

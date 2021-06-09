@@ -21,12 +21,12 @@
           <div class="video">
             <VideoPage
               :src="src"
-              :content="content"
+              :content="liveUrl"
               :uid="this.localUid"
             ></VideoPage>
           </div>
           <div class="intro">
-            <div class="title">
+            <div class="title" :v-if="content.name!=undefined">
               <b>{{ content.name }}</b>
               <el-tag v-for="t in content.type" :key="t" type="info">{{
                 t
@@ -153,6 +153,7 @@ export default {
       name: "",
       img: "",
       content: {},
+      liveUrl: "",
       chatHeight: 0,
       popover_visible: false,
       userList: [],
@@ -164,7 +165,7 @@ export default {
     axios
       .get("/server/api/videolist")
       .then((res) => {
-        this.videoData = res.data.game_list.concat(res.data.movie_list);
+        this.videoData = res.data.game_list.concat(res.data.movie_list).concat(res.data.live_list);
         console.log("videoData", this.videoData);
         this.createVideoPage(this.$route.query.id);
       })
@@ -194,7 +195,16 @@ export default {
     createVideoPage(id) {
       console.log(id);
       console.log(this.videoData[id - 1]);
-      this.src = this.videoData[id - 1].videoId;
+      if(this.videoData[id-1].url!=undefined){
+        this.liveUrl = this.videoData[id - 1].url;
+      }else{
+        this.liveUrl=""
+      }
+      if(this.videoData[id-1].videoId!=undefined){
+        this.src = this.videoData[id - 1].videoId;
+      }else{
+        this.src=""
+      }
       this.content = this.videoData[id - 1];
       this.img = "/server/" + this.content.image;
       console.log("img123", this.img);

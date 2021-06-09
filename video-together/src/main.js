@@ -13,8 +13,11 @@ import CanvasView from "./components/canvas/index.vue";
 import { io } from "socket.io-client";
 import "aliyun-webrtc-sdk";
 
+const hls = require("videojs-contrib-hls")
+
 Vue.use(ElementUI);
 Vue.use(VideoPlayer);
+Vue.use(hls)
 Vue.component("ChatView", ChatView);
 Vue.component("VideoPage", VideoPage);
 Vue.component("CanvasView", CanvasView);

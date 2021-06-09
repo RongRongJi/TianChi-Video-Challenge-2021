@@ -21,8 +21,8 @@ export default {
       required: true,
     },
     content: {
-      type: Object,
-      required: false,
+      type: String,
+      required: true,
     },
     uid: {
       type: Number,
@@ -47,6 +47,8 @@ export default {
         ],
         techOrder: ["html5", "flash"],
         width: document.documentElement.clientWidth,
+        hls: true,
+        notSupportedMessage: '视频加载中...',
       },
       lock: false,
       localUid: this.uid,
@@ -56,15 +58,27 @@ export default {
   watch: {
     src: {
       handler: function (newval, oldval) {
-        if (newval === "") {
+        if (newval === "" || newval == undefined) {
           console.log("newval", newval);
           return;
         }
         axios.get("server/api/videos?name=" + newval).then((res) => {
           console.log(res.data);
+          this.playerOptions.sources[0].type="video/mp4"
           this.playerOptions.sources[0].src =
             res.data.PlayInfoList.PlayInfo[0].PlayURL;
         });
+      },
+      immediate: true,
+    },
+    content: {
+      handler: function (newval, oldval) {
+        if (newval === "" || newval == undefined) {
+          console.log("content newval", newval);
+          return;
+        }
+        this.playerOptions.sources[0].type="application/x-mpegURL"
+          this.playerOptions.sources[0].src = newval;
       },
       immediate: true,
     },
