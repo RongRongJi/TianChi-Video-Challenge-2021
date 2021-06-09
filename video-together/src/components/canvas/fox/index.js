@@ -1,5 +1,6 @@
 "use strict";
 import { JeelizWebojiThreeHelper } from "./JeelizWebojiThreeHelper.js";
+import * as JEELIZFACEEXPRESSIONS from "./dist/jeelizFaceExpressions.module.js";
 const neuralNetworkModel = require("./dist/jeelizFaceExpressionsNNC.json");
 
 const superThat = (function() {
@@ -24,6 +25,9 @@ const superThat = (function() {
         position: [0, -80, 0],
         scale: 1.2,
       });
+    },
+    destroy: function() {
+      JEELIZFACEEXPRESSIONS.destroy();
     },
   };
   return that;

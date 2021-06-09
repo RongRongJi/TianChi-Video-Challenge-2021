@@ -458,7 +458,6 @@ const superThat = (function() {
     THREECAMERA = JeelizThreeHelper.create_camera();
 
     threeStuffs.scene.add(FRAMEOBJ3D);
-
   } // end init_threeScene()
 
   function init_faceFilter(videoSettings) {
@@ -526,6 +525,9 @@ const superThat = (function() {
           init_faceFilter(bestVideoSettings);
         },
       });
+    },
+    destroy: function() {
+      JEELIZFACEFILTER.destroy();
     },
   };
   return that;

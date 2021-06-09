@@ -22,7 +22,11 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      faceFoxRender.main();
+      faceDogRender.destroy();
+      faceDogRender.main();
+      // window.addEventListener('beforeunload', e => {
+        
+      // })
       const stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
       this.$emit("onLoad", stream);
     });

@@ -236,8 +236,11 @@ export default {
     });
     const that = this;
     window.addEventListener("resize", () => {
-      console.log("resize", that.$refs.carouselImage[0].$el.clientHeight);
-      that.carouselHeight = that.$refs.carouselImage[0].$el.clientHeight + "px";
+      try {
+        console.log("resize", that.$refs.carouselImage[0].$el.clientHeight);
+        that.carouselHeight =
+          that.$refs.carouselImage[0].$el.clientHeight + "px";
+      } catch (e) {}
     });
   },
   methods: {
