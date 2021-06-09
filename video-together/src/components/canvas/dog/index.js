@@ -531,4 +531,4 @@ const superThat = (function() {
   return that;
 })();
 
-export const CanvasRender = superThat;
+export const faceDogRender = superThat;

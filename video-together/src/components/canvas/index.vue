@@ -1,17 +1,18 @@
 <template>
   <div class="canvasContainer">
+    <canvas id="jeeFaceFilterCanvas" ref="jeeFaceFilterCanvas"></canvas>
     <canvas
-      width="600"
-      height="600"
-      id="jeeFaceFilterCanvas"
-      ref="jeeFaceFilterCanvas"
+      id="jeeFaceFilterCanvas1"
+      ref="jeeFaceFilterCanvas1"
+      hidden
     ></canvas>
     <div id="filter"></div>
   </div>
 </template>
 
 <script>
-import { CanvasRender } from "./index.js";
+import { faceDogRender } from "./dog/index.js";
+import { faceFoxRender } from "./fox/index.js";
 
 export default {
   name: "CanvasView",
@@ -21,7 +22,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      CanvasRender.main();
+      faceFoxRender.main();
       const stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
       this.$emit("onLoad", stream);
     });
