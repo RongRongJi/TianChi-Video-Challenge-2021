@@ -392,7 +392,7 @@ export default {
 }
 .carousel {
   display: block;
-  width: 80%;
+  width: 90%;
   //min-width: 1200px;
 
   .el-carousel__item h3 {
@@ -462,7 +462,7 @@ export default {
 .container {
   display: flex;
   flex-wrap: wrap;
-  width: 80%;
+  width: 90%;
   //min-width: 1200px;
   justify-content: space-between;
 

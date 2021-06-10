@@ -24,6 +24,8 @@ export default {
     this.$nextTick(() => {
       faceDogRender.destroy();
       faceDogRender.main();
+      // faceFoxRender.destroy();
+      // faceFoxRender.main();
       // window.addEventListener('beforeunload', e => {
         
       // })
