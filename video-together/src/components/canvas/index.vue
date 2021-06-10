@@ -13,6 +13,7 @@
 <script>
 import { faceDogRender } from "./dog/index.js";
 import { faceFoxRender } from "./fox/index.js";
+import { faceRender } from "./face/index.js";
 
 export default {
   name: "CanvasView",
@@ -22,10 +23,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      faceDogRender.destroy();
-      faceDogRender.main();
+      faceRender.destroy();
+      faceRender.main();
       // window.addEventListener('beforeunload', e => {
-        
+
       // })
       const stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
       this.$emit("onLoad", stream);
