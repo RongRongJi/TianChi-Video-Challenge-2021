@@ -33,7 +33,6 @@ const superThat = (function() {
     const threeStuffs = JeelizThreeHelper.init(spec, detect_callback);
     _videoGeometry = threeStuffs.videoMesh.geometry;
 
-
     threeStuffs.faceObject.add(DOGOBJ3D);
 
     // CREATE THE CAMERA

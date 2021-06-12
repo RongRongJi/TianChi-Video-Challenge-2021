@@ -1,8 +1,8 @@
 <template>
   <div class="canvasContainer">
-    <canvas 
+    <canvas
       height="200px"
-      id="jeeFaceFilterCanvas" 
+      id="jeeFaceFilterCanvas"
       ref="jeeFaceFilterCanvas"
     ></canvas>
     <canvas
@@ -21,13 +21,18 @@ import { faceRender } from "./face/index.js";
 
 export default {
   name: "CanvasView",
-  props: {},
+  props: {
+    type: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {};
   },
   mounted() {
     this.$nextTick(() => {
-      this.changeRender(0)
+      this.changeRender(this.type);
       // window.addEventListener('beforeunload', e => {
 
       // })
@@ -36,27 +41,27 @@ export default {
     });
   },
   methods: {
-    changeRender(type){
-      switch(type){
+    changeRender(type) {
+      switch (type) {
         case 0:
-          this.muteCamera()
-          faceRender.main()
-          break
+          this.muteCamera();
+          faceRender.main();
+          break;
         case 1:
-          this.muteCamera()
-          faceDogRender.main()
-          break
+          this.muteCamera();
+          faceDogRender.main();
+          break;
         case 2:
-          this.muteCamera()
-          faceFoxRender.main()
-          break
+          this.muteCamera();
+          faceFoxRender.main();
+          break;
       }
     },
-    muteCamera(){
-      faceRender.destroy()
-      faceDogRender.destroy()
-      faceFoxRender.destroy()
-    }
+    muteCamera() {
+      faceRender.destroy();
+      faceDogRender.destroy();
+      faceFoxRender.destroy();
+    },
   },
 };
 </script>

@@ -26,7 +26,7 @@
             ></VideoPage>
           </div>
           <div class="intro">
-            <div class="title" :v-if="content.name!=undefined">
+            <div class="title" :v-if="content.name != undefined">
               <b>{{ content.name }}</b>
               <el-tag v-for="t in content.type" :key="t" type="info">{{
                 t
@@ -61,59 +61,62 @@
         <div class="content">
           <div class="tab-bar">
             <el-button-group>
-            <el-button
-              type="info"
-              v-if="isSilence"
-              icon="el-icon-turn-off-microphone"
-              @click="setOrRelieveSilence"
-            ></el-button>
-            <el-button
-              type="info"
-              v-else
-              icon="el-icon-microphone"
-              @click="setOrRelieveSilence"
-            ></el-button>
-            <el-button
-              type="danger"
-              icon="el-icon-phone-outline"
-              @click="goBack"
-            ></el-button>
-            <el-button
-              type="info"
-              v-if="isStop"
-              icon="el-icon-video-camera"
-              @click="stopOrOpenVideo"
-            ></el-button>
-            <el-button
-              type="info"
-              v-else
-              icon="el-icon-video-camera-solid"
-              @click="stopOrOpenVideo"
-            ></el-button>
+              <el-button
+                type="info"
+                v-if="isSilence"
+                icon="el-icon-turn-off-microphone"
+                @click="setOrRelieveSilence"
+              ></el-button>
+              <el-button
+                type="info"
+                v-else
+                icon="el-icon-microphone"
+                @click="setOrRelieveSilence"
+              ></el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-phone-outline"
+                @click="goBack"
+              ></el-button>
+              <el-button
+                type="info"
+                v-if="isStop"
+                icon="el-icon-video-camera"
+                @click="stopOrOpenVideo"
+              ></el-button>
+              <el-button
+                type="info"
+                v-else
+                icon="el-icon-video-camera-solid"
+                @click="stopOrOpenVideo"
+              ></el-button>
             </el-button-group>
           </div>
           <div class="tab-bar">
             <el-button-group>
-            <el-button
-              type="info"
-              icon="iconfont icon-fox"
-              @click="$refs.canvasView.changeRender(2)"
-            ></el-button>
-            <el-button
-              type="info"
-              icon="iconfont icon-gou"
-              @click="$refs.canvasView.changeRender(1)"
-            ></el-button>
-            <el-button
-              type="info"
-              icon="iconfont icon-glasses"
-              @click="$refs.canvasView.changeRender(0)"
-            ></el-button>
+              <el-button
+                type="info"
+                icon="iconfont icon-fox"
+                @click="canvasViewType = 2"
+              ></el-button>
+              <el-button
+                type="info"
+                icon="iconfont icon-gou"
+                @click="canvasViewType = 1"
+              ></el-button>
+              <el-button
+                type="info"
+                icon="iconfont icon-glasses"
+                @click="canvasViewType = 0"
+              ></el-button>
             </el-button-group>
           </div>
           <div class="videochat-window">
-            <CanvasView @onLoad="getLocalStream"
+            <CanvasView
+              @onLoad="getLocalStream"
               ref="canvasView"
+              :type="canvasViewType"
+              :key="canvasViewKey"
             ></CanvasView>
             <!--画面div-->
             <video class="main-window" :id="userId" ref="large"></video>
@@ -142,7 +145,7 @@ import Util from "../../core/util/utils";
 import { message } from "../../components/message";
 import { getToken } from "../../common";
 import axios from "axios";
-import '../../assets/icon/iconfont.css'
+import "../../assets/icon/iconfont.css";
 
 export default {
   name: "single",
@@ -181,6 +184,9 @@ export default {
       chatHeight: 0,
       popover_visible: false,
       userList: [],
+      canvasViewType: 0,
+      canvasViewKey: 0,
+      isInit: false,
     };
   },
   mounted() {
@@ -189,7 +195,9 @@ export default {
     axios
       .get("/server/api/videolist")
       .then((res) => {
-        this.videoData = res.data.game_list.concat(res.data.movie_list).concat(res.data.live_list);
+        this.videoData = res.data.game_list
+          .concat(res.data.movie_list)
+          .concat(res.data.live_list);
         console.log("videoData", this.videoData);
         this.createVideoPage(this.$route.query.id);
       })
@@ -219,15 +227,15 @@ export default {
     createVideoPage(id) {
       console.log(id);
       console.log(this.videoData[id - 1]);
-      if(this.videoData[id-1].url!=undefined){
+      if (this.videoData[id - 1].url != undefined) {
         this.liveUrl = this.videoData[id - 1].url;
-      }else{
-        this.liveUrl=""
+      } else {
+        this.liveUrl = "";
       }
-      if(this.videoData[id-1].videoId!=undefined){
+      if (this.videoData[id - 1].videoId != undefined) {
         this.src = this.videoData[id - 1].videoId;
-      }else{
-        this.src=""
+      } else {
+        this.src = "";
       }
       this.content = this.videoData[id - 1];
       this.img = "/server/" + this.content.image;
@@ -241,49 +249,81 @@ export default {
       }, time);
     },
     init() {
-      this.registerCallBack();
-      RTCClient.instance.setAutoPublishSubscribe(false, true);
-      RTCClient.instance
-        .login(this.room, this.localUid)
-        .then((userId) => {
-          if (RTCClient.instance.getRoomUserList().length === 0) {
-            this.$message("你可以将房间码发给其他人");
-          }
-          this.isSwitchScreen = false;
-          this.userId = userId;
-        })
-        .then((res) => {
-          const tracks = this.localStream.getVideoTracks();
-          console.log(tracks);
-          RTCClient.instance
-            .setExternalMediaTrack(tracks[0], 1)
-            .then((e) => {
-              console.log("setExternalMediaTrack success", e);
-              RTCClient.instance
-                .publish()
-                .then((e) => {
-                  console.log("publish success", e);
-                  this.isPublish = true;
-                })
-                .catch((e) => {
-                  console.log("publish failed", e);
-                });
-            })
-            .catch((err) => {
-              console.log("setExternalMediaTrack failed", err);
-            });
-          // console.log("userId: ", this.userId);
-          // console.log(document.getElementById(this.userId));
-          // Util.startPreview(document.getElementById(this.userId)).then((re) => {
-          //   RTCClient.instance.setDisplayLocalVideo(
-          //     document.getElementById("localVideo"),
-          //     1
-          //   );
-          // });
-        })
-        .catch((err) => {
-          this.$message(err.message);
-        });
+      if (!this.isInit) {
+        this.registerCallBack();
+        RTCClient.instance.setAutoPublishSubscribe(false, true);
+        RTCClient.instance
+          .login(this.room, this.localUid)
+          .then((userId) => {
+            if (RTCClient.instance.getRoomUserList().length === 0) {
+              this.$message("你可以将房间码发给其他人");
+            }
+            this.isSwitchScreen = false;
+            this.userId = userId;
+          })
+          .then((res) => {
+            const tracks = this.localStream.getVideoTracks();
+            console.log(tracks);
+            RTCClient.instance
+              .setExternalMediaTrack(tracks[0], 1)
+              .then((e) => {
+                console.log("setExternalMediaTrack success", e);
+                RTCClient.instance
+                  .publish()
+                  .then((e) => {
+                    console.log("publish success", e);
+                    this.isPublish = true;
+                    this.isInit = true;
+                  })
+                  .catch((e) => {
+                    console.log("publish failed", e);
+                  });
+              })
+              .catch((err) => {
+                console.log("setExternalMediaTrack failed", err);
+              });
+            // console.log("userId: ", this.userId);
+            // console.log(document.getElementById(this.userId));
+            // Util.startPreview(document.getElementById(this.userId)).then((re) => {
+            //   RTCClient.instance.setDisplayLocalVideo(
+            //     document.getElementById("localVideo"),
+            //     1
+            //   );
+            // });
+          })
+          .catch((err) => {
+            this.$message(err.message);
+          });
+      } else {
+        RTCClient.instance
+          .unPublish()
+          .then((e) => {
+            console.log("unPublish success", e);
+            this.isPublish = false;
+            const tracks = this.localStream.getVideoTracks();
+            console.log(tracks);
+            RTCClient.instance
+              .setExternalMediaTrack(tracks[0], 1)
+              .then((e) => {
+                console.log("setExternalMediaTrack success", e);
+                RTCClient.instance
+                  .publish()
+                  .then((e) => {
+                    console.log("publish success", e);
+                    this.isPublish = true;
+                  })
+                  .catch((e) => {
+                    console.log("publish failed", e);
+                  });
+              })
+              .catch((err) => {
+                console.log("setExternalMediaTrack failed", err);
+              });
+          })
+          .catch((e) => {
+            console.log("unPublish failed", e);
+          });
+      }
     },
     // 注册回调
     registerCallBack() {
@@ -359,7 +399,7 @@ export default {
         this.$message("未推流");
         return;
       }
-      this.$refs.canvasView.muteCamera()
+      this.$refs.canvasView.muteCamera();
       // RTCClient.instance
       //   .muteLocalCamera(document.getElementById(RTCClient.instance.userId))
       //   .then((re) => {
@@ -368,6 +408,11 @@ export default {
       //     );
       //   });
       this.video = !this.video;
+    },
+  },
+  watch: {
+    canvasViewType: function () {
+      this.canvasViewKey += 1;
     },
   },
 };
