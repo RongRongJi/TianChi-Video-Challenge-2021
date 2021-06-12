@@ -12,6 +12,7 @@ import VideoPage from "./components/video/index.vue";
 import CanvasView from "./components/canvas/index.vue";
 import { io } from "socket.io-client";
 import "aliyun-webrtc-sdk";
+import './assets/icon/iconfont.css'
 
 const hls = require("videojs-contrib-hls")
 

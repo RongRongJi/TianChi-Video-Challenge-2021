@@ -1,6 +1,10 @@
 <template>
   <div class="canvasContainer">
-    <canvas id="jeeFaceFilterCanvas" ref="jeeFaceFilterCanvas"></canvas>
+    <canvas 
+      height="200px"
+      id="jeeFaceFilterCanvas" 
+      ref="jeeFaceFilterCanvas"
+    ></canvas>
     <canvas
       id="jeeFaceFilterCanvas1"
       ref="jeeFaceFilterCanvas1"
@@ -23,10 +27,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      faceDogRender.destroy();
-      faceDogRender.main();
-      // faceFoxRender.destroy();
-      // faceFoxRender.main();
+      this.changeRender(0)
       // window.addEventListener('beforeunload', e => {
 
       // })
@@ -34,7 +35,29 @@ export default {
       this.$emit("onLoad", stream);
     });
   },
-  methods: {},
+  methods: {
+    changeRender(type){
+      switch(type){
+        case 0:
+          this.muteCamera()
+          faceRender.main()
+          break
+        case 1:
+          this.muteCamera()
+          faceDogRender.main()
+          break
+        case 2:
+          this.muteCamera()
+          faceFoxRender.main()
+          break
+      }
+    },
+    muteCamera(){
+      faceRender.destroy()
+      faceDogRender.destroy()
+      faceFoxRender.destroy()
+    }
+  },
 };
 </script>
 

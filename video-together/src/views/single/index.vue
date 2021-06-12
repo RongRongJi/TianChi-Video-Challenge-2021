@@ -60,6 +60,7 @@
         </div>
         <div class="content">
           <div class="tab-bar">
+            <el-button-group>
             <el-button
               type="info"
               v-if="isSilence"
@@ -89,9 +90,31 @@
               icon="el-icon-video-camera-solid"
               @click="stopOrOpenVideo"
             ></el-button>
+            </el-button-group>
+          </div>
+          <div class="tab-bar">
+            <el-button-group>
+            <el-button
+              type="info"
+              icon="iconfont icon-fox"
+              @click="$refs.canvasView.changeRender(2)"
+            ></el-button>
+            <el-button
+              type="info"
+              icon="iconfont icon-gou"
+              @click="$refs.canvasView.changeRender(1)"
+            ></el-button>
+            <el-button
+              type="info"
+              icon="iconfont icon-glasses"
+              @click="$refs.canvasView.changeRender(0)"
+            ></el-button>
+            </el-button-group>
           </div>
           <div class="videochat-window">
-            <CanvasView @onLoad="getLocalStream"></CanvasView>
+            <CanvasView @onLoad="getLocalStream"
+              ref="canvasView"
+            ></CanvasView>
             <!--画面div-->
             <video class="main-window" :id="userId" ref="large"></video>
             <!--对方画面div-->
@@ -119,6 +142,7 @@ import Util from "../../core/util/utils";
 import { message } from "../../components/message";
 import { getToken } from "../../common";
 import axios from "axios";
+import '../../assets/icon/iconfont.css'
 
 export default {
   name: "single",
@@ -335,13 +359,14 @@ export default {
         this.$message("未推流");
         return;
       }
-      RTCClient.instance
-        .muteLocalCamera(document.getElementById(RTCClient.instance.userId))
-        .then((re) => {
-          RTCClient.instance.setDisplayLocalVideo(
-            document.getElementById(RTCClient.instance.userId)
-          );
-        });
+      this.$refs.canvasView.muteCamera()
+      // RTCClient.instance
+      //   .muteLocalCamera(document.getElementById(RTCClient.instance.userId))
+      //   .then((re) => {
+      //     RTCClient.instance.setDisplayLocalVideo(
+      //       document.getElementById(RTCClient.instance.userId)
+      //     );
+      //   });
       this.video = !this.video;
     },
   },

@@ -1,0 +1,30 @@
+{
+  "id": "2608694",
+  "name": "my-icon",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "869800",
+      "name": "fox",
+      "font_class": "fox",
+      "unicode": "e744",
+      "unicode_decimal": 59204
+    },
+    {
+      "icon_id": "5205031",
+      "name": "狗",
+      "font_class": "gou",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "16810700",
+      "name": "眼镜",
+      "font_class": "glasses",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    }
+  ]
+}
