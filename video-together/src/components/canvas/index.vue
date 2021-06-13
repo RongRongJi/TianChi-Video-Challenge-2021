@@ -60,7 +60,7 @@ export default {
         _this.chunks.push(e.data)
       }
       //this.recorder.onStop = this.saveRecord()
-      this.recorder.start()
+      
 
       //auido
       navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
@@ -68,18 +68,20 @@ export default {
         this.audioRecorder.ondataavailable = function(e){
           _this.audioChunks.push(e.data)
         }
+        this.recorder.start()
         this.audioRecorder.start()
       })
     },
     saveRecord(){
       this.recorder.stop()
+      this.audioRecorder.stop()
       const blob = new Blob(this.chunks, {type: 'video/webm'})
       console.log(this.chunks)
       let formData = new FormData()
       formData.append('file', blob)
       
       //audio
-      this.audioRecorder.stop()
+      
       let audioBlob = new Blob(this.audioChunks, {'type':'audio/ogg; codecs=opus'})
       formData.append('file', audioBlob)
       console.log('formData', formData)
