@@ -19,6 +19,7 @@ import { faceDogRender } from "./dog/index.js";
 import { faceFoxRender } from "./fox/index.js";
 import { faceRender } from "./face/index.js";
 import axios from 'axios'
+import { Form } from 'element-ui';
 
 export default {
   name: "CanvasView",
@@ -32,9 +33,10 @@ export default {
     return {
       isRecord: false,
       recorder: null,
+      audioRecorder: null,
       stream: null,
       chunks: [],
-      chunkList: []
+      audioChunks: [],
     };
   },
   mounted() {
@@ -59,18 +61,29 @@ export default {
       }
       //this.recorder.onStop = this.saveRecord()
       this.recorder.start()
-      console.log("recorder", this.recorder)
-      console.log(this.recorder.state)
+
+      //auido
+      navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+        this.audioRecorder = new MediaRecorder(stream)
+        this.audioRecorder.ondataavailable = function(e){
+          _this.audioChunks.push(e.data)
+        }
+        this.audioRecorder.start()
+      })
     },
     saveRecord(){
       this.recorder.stop()
       const blob = new Blob(this.chunks, {type: 'video/webm'})
       console.log(this.chunks)
-      let url = URL.createObjectURL(blob)
-      console.log(url)
       let formData = new FormData()
       formData.append('file', blob)
+      
+      //audio
+      this.audioRecorder.stop()
+      let audioBlob = new Blob(this.audioChunks, {'type':'audio/ogg; codecs=opus'})
+      formData.append('file', audioBlob)
       console.log('formData', formData)
+
       axios({
           method: 'post',
           url: "/server/api/downloadBlob",
@@ -82,6 +95,7 @@ export default {
         .then((res) => {
         })
         .catch((err) => console.log(err));
+
 
     },
     changeRender(type) {

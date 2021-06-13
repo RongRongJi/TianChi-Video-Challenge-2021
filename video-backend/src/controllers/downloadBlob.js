@@ -1,7 +1,7 @@
 export default {
     'POST ': async (ctx, next) => {
         ctx.body = ctx.request.body
-        console.log('ctx.body', ctx.request)
+        console.log('ctx.body', ctx.request.files)
     },
     'DELETE ': async (ctx, next) => {
 
