@@ -18,6 +18,7 @@
 import { faceDogRender } from "./dog/index.js";
 import { faceFoxRender } from "./fox/index.js";
 import { faceRender } from "./face/index.js";
+import axios from 'axios'
 
 export default {
   name: "CanvasView",
@@ -28,7 +29,13 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      isRecord: false,
+      recorder: null,
+      stream: null,
+      chunks: [],
+      chunkList: []
+    };
   },
   mounted() {
     this.$nextTick(() => {
@@ -36,11 +43,47 @@ export default {
       // window.addEventListener('beforeunload', e => {
 
       // })
-      const stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
-      this.$emit("onLoad", stream);
+      this.stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
+      this.$emit("onLoad", this.stream);
+      this.recordInit()
     });
   },
   methods: {
+    recordInit(){
+      let _this = this
+      this.isRecord = true
+      this.recorder = new MediaRecorder(this.stream)
+      this.recorder.ondataavailable = function(e){
+        console.log(e.data)
+        _this.chunks.push(e.data)
+      }
+      //this.recorder.onStop = this.saveRecord()
+      this.recorder.start()
+      console.log("recorder", this.recorder)
+      console.log(this.recorder.state)
+    },
+    saveRecord(){
+      this.recorder.stop()
+      const blob = new Blob(this.chunks, {type: 'video/webm'})
+      console.log(this.chunks)
+      let url = URL.createObjectURL(blob)
+      console.log(url)
+      let formData = new FormData()
+      formData.append('file', blob)
+      console.log('formData', formData)
+      axios({
+          method: 'post',
+          url: "/server/api/downloadBlob",
+          data: formData,
+          headers:{
+            'Content-Type': 'multipart/form-data'
+          },
+        })
+        .then((res) => {
+        })
+        .catch((err) => console.log(err));
+
+    },
     changeRender(type) {
       switch (type) {
         case 0:

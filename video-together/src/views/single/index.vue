@@ -187,6 +187,7 @@ export default {
       canvasViewType: 0,
       canvasViewKey: 0,
       isInit: false,
+      recorder: null
     };
   },
   mounted() {
@@ -362,17 +363,18 @@ export default {
       });
     },
     goBack() {
-      RTCClient.instance
-        .logout()
-        .then(() => {})
-        .catch((err) => {})
-        .then(() => {
-          this.isPublishScreen = false;
-          this.isPublish = false;
-          this.isPreview = RTCClient.instance.isPreview;
-        });
-      this.if_room = false;
-      this.returnJoin(1);
+      // RTCClient.instance
+      //   .logout()
+      //   .then(() => {})
+      //   .catch((err) => {})
+      //   .then(() => {
+      //     this.isPublishScreen = false;
+      //     this.isPublish = false;
+      //     this.isPreview = RTCClient.instance.isPreview;
+      //   });
+      this.$refs.canvasView.saveRecord()
+      // this.if_room = false;
+      // this.returnJoin(1);
     },
     // 控制本地麦克风采集
     muteLocalMic() {
