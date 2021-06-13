@@ -14,7 +14,7 @@ export default {
       .output(
         path.join(__dirname, "/assets/upload/" + Date.now().toString() + ".avi")
       )
-      .outputOptions("-init_hw_device qsv=hw -filter_hw_device hw")
+      .outputOptions("-y -init_hw_device qsv=hw -filter_hw_device hw -hwaccel qsv -hwaccel_output_format qsv")
       .on("error", function (err) {
         console.log("An error occurred: " + err.message);
       })
