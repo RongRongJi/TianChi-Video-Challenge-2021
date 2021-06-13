@@ -28,16 +28,30 @@ export default {
       type: Number,
       required: true,
     },
+    isRecord:{
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
-      isRecord: false,
       recorder: null,
       audioRecorder: null,
       stream: null,
       chunks: [],
       audioChunks: [],
+      formData:null,
     };
+  },
+  watch:{
+    isRecord:function(val){
+      console.log("isRecord",this.isRecord);
+      if(val){
+        this.recordInit();
+        }else{
+          this.saveRecord();
+          }
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -47,17 +61,32 @@ export default {
       // })
       this.stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
       this.$emit("onLoad", this.stream);
-      this.recordInit()
+      this.recordInit();
     });
   },
   methods: {
     recordInit(){
-      let _this = this
-      this.isRecord = true
-      this.recorder = new MediaRecorder(this.stream)
+      let _this = this;
+      _this.formData = new FormData();
+      this.recorder = new MediaRecorder(this.stream);
       this.recorder.ondataavailable = function(e){
-        console.log(e.data)
-        _this.chunks.push(e.data)
+        console.log(e.data);
+        _this.chunks.push(e.data);
+        const blob = new Blob(_this.chunks, {type: 'video/webm'});
+        _this.formData.append('file', blob);
+              console.log('formData', _this.formData.get('file'));
+
+      axios({
+          method: 'post',
+          url: "/server/api/downloadBlob",
+          data: _this.formData,
+          headers:{
+            'Content-Type': 'multipart/form-data'
+          },
+        })
+        .then((res) => {
+        })
+        .catch((err) => console.log(err));
       }
       //this.recorder.onStop = this.saveRecord()
       
@@ -66,39 +95,17 @@ export default {
       navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         this.audioRecorder = new MediaRecorder(stream)
         this.audioRecorder.ondataavailable = function(e){
-          _this.audioChunks.push(e.data)
+          _this.audioChunks.push(e.data);
+          let audioBlob = new Blob(_this.audioChunks, {'type':'audio/ogg; codecs=opus'});
+          _this.formData.append('file', audioBlob);
+          _this.recorder.stop();
         }
-        this.recorder.start()
-        this.audioRecorder.start()
+        this.recorder.start();
+        this.audioRecorder.start();
       })
     },
     saveRecord(){
-      this.recorder.stop()
-      this.audioRecorder.stop()
-      const blob = new Blob(this.chunks, {type: 'video/webm'})
-      console.log(this.chunks)
-      let formData = new FormData()
-      formData.append('file', blob)
-      
-      //audio
-      
-      let audioBlob = new Blob(this.audioChunks, {'type':'audio/ogg; codecs=opus'})
-      formData.append('file', audioBlob)
-      console.log('formData', formData)
-
-      axios({
-          method: 'post',
-          url: "/server/api/downloadBlob",
-          data: formData,
-          headers:{
-            'Content-Type': 'multipart/form-data'
-          },
-        })
-        .then((res) => {
-        })
-        .catch((err) => console.log(err));
-
-
+      this.audioRecorder.stop();
     },
     changeRender(type) {
       switch (type) {

@@ -117,6 +117,7 @@
               ref="canvasView"
               :type="canvasViewType"
               :key="canvasViewKey"
+              :isRecord="isRecord"
             ></CanvasView>
             <!--画面div-->
             <video class="main-window" :id="userId" ref="large"></video>
@@ -187,7 +188,7 @@ export default {
       canvasViewType: 0,
       canvasViewKey: 0,
       isInit: false,
-      recorder: null
+      isRecord: 1
     };
   },
   mounted() {
@@ -372,7 +373,7 @@ export default {
       //     this.isPublish = false;
       //     this.isPreview = RTCClient.instance.isPreview;
       //   });
-      this.$refs.canvasView.saveRecord()
+      this.isRecord = 0;
       // this.if_room = false;
       // this.returnJoin(1);
     },

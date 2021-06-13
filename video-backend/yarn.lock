@@ -1529,6 +1529,11 @@
   dependencies:
     "async-done" "^1.2.2"
 
+"async@>=0.2.9":
+  "integrity" "sha512-TR2mEZFVOj2pLStYxLht7TyfuRzaydfpxr3k9RpHIzMgw7A64dzsdqCxH1WJyQdoe8T10nDXd9wnEigmiuHIZw=="
+  "resolved" "https://registry.npmjs.org/async/-/async-3.2.0.tgz"
+  "version" "3.2.0"
+
 "asynckit@^0.4.0":
   "integrity" "sha1-x57Zf380y48robyXkLzDZkdLS3k="
   "resolved" "https://registry.npm.taobao.org/asynckit/download/asynckit-0.4.0.tgz"
@@ -2906,6 +2911,14 @@
   "integrity" "sha1-595vEnnd2cqarIpZcdYYYGs6q0E="
   "resolved" "https://registry.npm.taobao.org/flagged-respawn/download/flagged-respawn-1.0.1.tgz"
   "version" "1.0.1"
+
+"fluent-ffmpeg@^2.1.2":
+  "integrity" "sha1-yVLeIkD4EuvaCqgAbXd27irPfXQ="
+  "resolved" "https://registry.npmjs.org/fluent-ffmpeg/-/fluent-ffmpeg-2.1.2.tgz"
+  "version" "2.1.2"
+  dependencies:
+    "async" ">=0.2.9"
+    "which" "^1.1.1"
 
 "flush-write-stream@^1.0.2":
   "integrity" "sha1-jdfYc6G6vCB9lOrQwuDkQnbr8ug="
@@ -6831,6 +6844,13 @@
   "integrity" "sha1-2e8H3Od7mQK4o6j6SzHD4/fm6Ho="
   "resolved" "https://registry.npm.taobao.org/which-module/download/which-module-2.0.0.tgz"
   "version" "2.0.0"
+
+"which@^1.1.1":
+  "integrity" "sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ=="
+  "resolved" "https://registry.npmjs.org/which/-/which-1.3.1.tgz"
+  "version" "1.3.1"
+  dependencies:
+    "isexe" "^2.0.0"
 
 "which@^1.2.14":
   "integrity" "sha1-pFBD1U9YBTFtqNYvn1CRjT2nCwo="
