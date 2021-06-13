@@ -46,11 +46,11 @@ export default {
   watch:{
     isRecord:function(val){
       console.log("isRecord",this.isRecord);
-      if(val){
+      if(val==1){
         this.recordInit();
-        }else{
-          this.saveRecord();
-          }
+      }else if(val==0){
+        this.saveRecord();
+      }
     }
   },
   mounted() {
@@ -61,37 +61,37 @@ export default {
       // })
       this.stream = this.$refs.jeeFaceFilterCanvas.captureStream(25);
       this.$emit("onLoad", this.stream);
-      this.recordInit();
     });
   },
   methods: {
     recordInit(){
       let _this = this;
       _this.formData = new FormData();
-      this.recorder = new MediaRecorder(this.stream);
-      this.recorder.ondataavailable = function(e){
-        console.log(e.data);
-        _this.chunks.push(e.data);
-        const blob = new Blob(_this.chunks, {type: 'video/webm'});
-        _this.formData.append('file', blob);
-              console.log('formData', _this.formData.get('file'));
 
-      axios({
-          method: 'post',
-          url: "/server/api/downloadBlob",
-          data: _this.formData,
-          headers:{
-            'Content-Type': 'multipart/form-data'
-          },
-        })
-        .then((res) => {
-        })
-        .catch((err) => console.log(err));
-      }
-      //this.recorder.onStop = this.saveRecord()
-      
+      //screen + webaudio
+      navigator.mediaDevices.getDisplayMedia({audio:true, video:true}).then(stream=>{
+        this.recorder = new MediaRecorder(stream)
+        this.recorder.ondataavailable = function(e){
+          _this.chunks.push(e.data);
+          let videoBlob = new Blob(_this.chunks, {'type':'video/webm'});
+          _this.formData.append('file', videoBlob);
+          console.log('formData', _this.formData.get('file'));
 
-      //auido
+          axios({
+              method: 'post',
+              url: "/server/api/downloadBlob",
+              data: _this.formData,
+              headers:{
+                'Content-Type': 'multipart/form-data'
+              },
+            })
+            .then((res) => {
+            })
+            .catch((err) => console.log(err));
+            }
+      })
+
+      //microphone auido
       navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         this.audioRecorder = new MediaRecorder(stream)
         this.audioRecorder.ondataavailable = function(e){

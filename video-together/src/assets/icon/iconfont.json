@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2506179",
+      "name": "静音",
+      "font_class": "jingyin",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "2569879",
+      "name": "摄像头",
+      "font_class": "shexiangtou",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "6970018",
+      "name": "挂断",
+      "font_class": "guaduan",
+      "unicode": "e6fc",
+      "unicode_decimal": 59132
+    },
+    {
+      "icon_id": "12036443",
+      "name": "录制",
+      "font_class": "luzhi",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "14191059",
+      "name": "麦克风",
+      "font_class": "maikefeng",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "19653791",
+      "name": "录制",
+      "font_class": "luzhi1",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "19989986",
+      "name": "摄像头-关闭",
+      "font_class": "shexiangtou-guanbi",
+      "unicode": "e7ce",
+      "unicode_decimal": 59342
+    },
+    {
       "icon_id": "869800",
       "name": "fox",
       "font_class": "fox",

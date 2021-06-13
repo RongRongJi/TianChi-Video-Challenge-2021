@@ -64,52 +64,86 @@
               <el-button
                 type="info"
                 v-if="isSilence"
-                icon="el-icon-turn-off-microphone"
+                icon="iconfont icon-jingyin"
                 @click="setOrRelieveSilence"
+                circle
               ></el-button>
               <el-button
                 type="info"
                 v-else
-                icon="el-icon-microphone"
+                icon="iconfont icon-maikefeng"
                 @click="setOrRelieveSilence"
+                circle
               ></el-button>
               <el-button
                 type="danger"
-                icon="el-icon-phone-outline"
+                icon="iconfont icon-guaduan"
                 @click="goBack"
+                circle
               ></el-button>
               <el-button
                 type="info"
                 v-if="isStop"
-                icon="el-icon-video-camera"
+                icon="iconfont icon-shexiangtou-guanbi"
                 @click="stopOrOpenVideo"
+                circle
               ></el-button>
               <el-button
                 type="info"
                 v-else
-                icon="el-icon-video-camera-solid"
+                icon="iconfont icon-shexiangtou"
                 @click="stopOrOpenVideo"
+                circle
               ></el-button>
             </el-button-group>
-          </div>
-          <div class="tab-bar">
+            <el-divider direction="vertical"></el-divider>
             <el-button-group>
               <el-button
                 type="info"
                 icon="iconfont icon-fox"
                 @click="canvasViewType = 2"
+                circle
               ></el-button>
               <el-button
                 type="info"
                 icon="iconfont icon-gou"
                 @click="canvasViewType = 1"
+                circle
               ></el-button>
               <el-button
                 type="info"
                 icon="iconfont icon-glasses"
                 @click="canvasViewType = 0"
+                circle
               ></el-button>
             </el-button-group>
+            <el-divider direction="vertical"></el-divider>
+            <el-button-group>
+              <el-button
+                type="info"
+                icon="iconfont icon-luzhi1"
+                v-if="isRecord==-1"
+                circle
+                @click="recordDialog=true"
+              ></el-button>
+              <el-button
+                type="info"
+                icon="iconfont icon-luzhi"
+                v-if="isRecord!=-1"
+                circle
+                @click="createRecorder()"
+              ></el-button>
+            </el-button-group>
+              <el-dialog
+                title="生成反应视频"
+                :visible.sync="recordDialog"
+                width="30%">
+                <span>此功能将开启屏幕录制，再次点击录制按钮将自动为您生成反应视频</span>
+                <span slot="footer" class="dialog-footer">
+                  <el-button @click="recordDialog = false">取 消</el-button>
+                  <el-button type="primary" @click="startRecorder()">确 定</el-button>
+                </span>
+              </el-dialog>
           </div>
           <div class="videochat-window">
             <CanvasView
@@ -120,7 +154,7 @@
               :isRecord="isRecord"
             ></CanvasView>
             <!--画面div-->
-            <video class="main-window" :id="userId" ref="large"></video>
+            <!-- <video class="main-window" :id="userId" ref="large"></video> -->
             <!--对方画面div-->
             <video
               class="main-window"
@@ -188,7 +222,8 @@ export default {
       canvasViewType: 0,
       canvasViewKey: 0,
       isInit: false,
-      isRecord: 1
+      isRecord: -1,
+      recordDialog: false
     };
   },
   mounted() {
@@ -210,12 +245,20 @@ export default {
   },
   destroyed() {
     try {
-      this.goBack();
+      //this.goBack();
     } catch (e) {
       // 为了兼容低版本，用try catch包裹一下
     }
   },
   methods: {
+    startRecorder(){
+      this.isRecord = 1
+      this.recordDialog = false
+    },
+    createRecorder(){
+      this.isRecord = 0
+      this.$message("反应视频正在后台制作中，请稍后查看...");
+    },
     getLocalStream(stream) {
       this.$nextTick(() => {
         console.log("get local stream", stream);
@@ -373,14 +416,15 @@ export default {
       //     this.isPublish = false;
       //     this.isPreview = RTCClient.instance.isPreview;
       //   });
-      this.isRecord = 0;
-      // this.if_room = false;
-      // this.returnJoin(1);
+      //this.isRecord = 0;
+      this.$refs.canvasView.muteCamera();
+      this.if_room = false;
+      this.returnJoin(1);
     },
     // 控制本地麦克风采集
     muteLocalMic() {
       if (!this.isPublish) {
-        this.$message("未推流");
+        //this.$message("未推流");
         return;
       }
       RTCClient.instance.muteLocalMic(!this.audio);
@@ -399,7 +443,7 @@ export default {
     // 摄像头禁止
     muteLocalCamera() {
       if (!this.isPublish) {
-        this.$message("未推流");
+        //this.$message("未推流");
         return;
       }
       this.$refs.canvasView.muteCamera();
@@ -527,7 +571,8 @@ export default {
   box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
   list-style: none;
   display: flex;
-  justify-content: center;
+  // justify-content: center;
+  justify-content: space-between;
   align-items: center;
   color: #fff;
 
