@@ -12,13 +12,13 @@ import VideoPage from "./components/video/index.vue";
 import CanvasView from "./components/canvas/index.vue";
 import { io } from "socket.io-client";
 import "aliyun-webrtc-sdk";
-import './assets/icon/iconfont.css'
+import "./assets/icon/iconfont.css";
 
-const hls = require("videojs-contrib-hls")
+const hls = require("videojs-contrib-hls");
 
 Vue.use(ElementUI);
 Vue.use(VideoPlayer);
-Vue.use(hls)
+Vue.use(hls);
 Vue.component("ChatView", ChatView);
 Vue.component("VideoPage", VideoPage);
 Vue.component("CanvasView", CanvasView);
@@ -47,11 +47,10 @@ D3hlhGVZ1UeDJEuMAMPD
 -----END CERTIFICATE-----
 `;
 
-var url = 'https://localhost:5000'
-try{
-  url = require('./server.js')
-}catch(e){
-}
+var url = "https://localhost:5000";
+try {
+  url = require("./server.js");
+} catch (e) {}
 var socket = io(url, { ca: tls });
 Vue.prototype.$socketio = socket;
 

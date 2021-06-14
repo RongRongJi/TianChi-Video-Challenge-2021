@@ -20,6 +20,7 @@
     "three": "^0.112.0",
     "videojs-contrib-hls": "^5.15.0",
     "vue": "^2.6.12",
+    "vue-resize-directive": "^1.2.0",
     "vue-router": "^3.5.1",
     "vue-video-player": "^5.0.2"
   },
