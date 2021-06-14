@@ -131,7 +131,7 @@
                 icon="iconfont icon-luzhi"
                 v-if="isRecord != -1"
                 circle
-                @click="submitDialog = true"
+                @click="()=>{submitDialog = true;this.$refs.canvasView.saveRecord()}"
               ></el-button>
             </el-button-group>
             <el-dialog
@@ -305,7 +305,7 @@ export default {
     },
     createRecorder() {
       this.isRecord = 0;
-      this.$refs.canvasView.saveRecord(this.form.title, this.form.image)
+      this.$refs.canvasView.postRecord(this.form.title, this.form.image)
       this.submitDialog = false;
       this.$message("反应视频正在后台制作中，请稍后查看...");
       setTimeout(() => {

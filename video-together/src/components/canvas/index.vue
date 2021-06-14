@@ -82,27 +82,8 @@ export default {
           let videoBlob = new Blob(_this.chunks, {'type':'video/webm'});
           _this.formData.append('file', videoBlob);
           console.log('formData', _this.formData.get('file'));
-          _this.formData.append('image', _this.imageFile)
-          _this.formData.append('title', _this.title)
-          axios({
-              method: 'post',
-              url: "/server/api/downloadBlob",
-              data: _this.formData,
-              headers:{
-                'Content-Type': 'multipart/form-data'
-              },
-            })
-            .then((res) => {
-            })
-            .catch((err) => console.log(err));
-
-            let tracks = _this.screenStream.getTracks()
-            tracks.forEach(track => track.stop());
-            _this.chunks = []
-            _this.audioChunks = []
-            _this.formData = null
-
-            }
+          
+        }
 
 
       })
@@ -120,11 +101,31 @@ export default {
         this.audioRecorder.start();
       })
     },
-    saveRecord(title, image){
+    saveRecord(){
+      this.audioRecorder.stop();
+    },
+    postRecord(title, image){
       this.title = title
       this.imageFile = image
       console.log(title, image)
-      this.audioRecorder.stop();
+      this.formData.append('image', this.imageFile)
+      this.formData.append('title', this.title)
+      axios({
+        method: 'post',
+        url: "/server/api/downloadBlob",
+        data: this.formData,
+        headers:{
+          'Content-Type': 'multipart/form-data'
+        },
+      })
+      .then((res) => {
+        })
+      .catch((err) => console.log(err));
+      let tracks = this.screenStream.getTracks()
+      tracks.forEach(track => track.stop());
+      this.chunks = []
+      this.audioChunks = []
+      this.formData = null
     },
     changeRender(type) {
       switch (type) {
