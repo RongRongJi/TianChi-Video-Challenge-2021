@@ -17,7 +17,7 @@
     </el-header>
     <el-container>
       <el-main>
-        <div class="video_chat">
+        <div class="video_chat" ref="videoChat" v-resize="onResize">
           <div class="video">
             <VideoPage
               :src="src"
@@ -58,7 +58,7 @@
             </div>
           </div>
         </div>
-        <div class="content">
+        <div class="content" ref="content" :style="{ height: chatHeight }">
           <div class="tab-bar">
             <el-button-group>
               <el-button
@@ -122,28 +122,33 @@
               <el-button
                 type="info"
                 icon="iconfont icon-luzhi1"
-                v-if="isRecord==-1"
+                v-if="isRecord == -1"
                 circle
-                @click="recordDialog=true"
+                @click="recordDialog = true"
               ></el-button>
               <el-button
                 type="info"
                 icon="iconfont icon-luzhi"
-                v-if="isRecord!=-1"
+                v-if="isRecord != -1"
                 circle
                 @click="createRecorder()"
               ></el-button>
             </el-button-group>
-              <el-dialog
-                title="生成反应视频"
-                :visible.sync="recordDialog"
-                width="30%">
-                <span>此功能将开启屏幕录制，再次点击录制按钮将自动为您生成反应视频</span>
-                <span slot="footer" class="dialog-footer">
-                  <el-button @click="recordDialog = false">取 消</el-button>
-                  <el-button type="primary" @click="startRecorder()">确 定</el-button>
-                </span>
-              </el-dialog>
+            <el-dialog
+              title="生成反应视频"
+              :visible.sync="recordDialog"
+              width="30%"
+            >
+              <span
+                >此功能将开启屏幕录制，再次点击录制按钮将自动为您生成反应视频</span
+              >
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="recordDialog = false">取 消</el-button>
+                <el-button type="primary" @click="startRecorder()"
+                  >确 定</el-button
+                >
+              </span>
+            </el-dialog>
           </div>
           <div class="videochat-window">
             <CanvasView
@@ -181,9 +186,13 @@ import { message } from "../../components/message";
 import { getToken } from "../../common";
 import axios from "axios";
 import "../../assets/icon/iconfont.css";
+import resize from "vue-resize-directive";
 
 export default {
   name: "single",
+  directives: {
+    resize,
+  },
   created() {
     let arr = ["./sha256.js"];
     arr.map((item) => {
@@ -223,7 +232,7 @@ export default {
       canvasViewKey: 0,
       isInit: false,
       isRecord: -1,
-      recordDialog: false
+      recordDialog: false,
     };
   },
   mounted() {
@@ -242,6 +251,13 @@ export default {
 
     // 初始化音视频实例
     console.warn("初始化音视频sdk");
+    // this.$nextTick(() => {
+    //   this.chatHeight = this.$refs.videoChat.clientHeight + "px";
+    // });
+    // const that = this;
+    // window.addEventListener("resize", () => {
+    //   that.chatHeight = that.$refs.videoChat.clientHeight + "px";
+    // });
   },
   destroyed() {
     try {
@@ -251,12 +267,16 @@ export default {
     }
   },
   methods: {
-    startRecorder(){
-      this.isRecord = 1
-      this.recordDialog = false
+    onResize() {
+      console.log("resize");
+      this.chatHeight = this.$refs.videoChat.clientHeight + "px";
     },
-    createRecorder(){
-      this.isRecord = 0
+    startRecorder() {
+      this.isRecord = 1;
+      this.recordDialog = false;
+    },
+    createRecorder() {
+      this.isRecord = 0;
       this.$message("反应视频正在后台制作中，请稍后查看...");
     },
     getLocalStream(stream) {
@@ -499,21 +519,26 @@ export default {
   flex-direction: row;
   justify-content: center;
   background-color: #f2f5f6;
+  align-items: flex-start;
 
   .content {
     width: 20%;
+    min-width: 325px;
     margin: 0 20px 0 20px;
     background: #f2f5f6;
     border: solid gainsboro 1px;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
   }
 }
 
 .videochat-window {
   display: flex;
   flex-direction: column;
+  max-height: 40%;
+  overflow: hidden auto;
 
   .main-window {
     width: 100%;

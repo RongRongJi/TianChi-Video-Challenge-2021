@@ -13,7 +13,9 @@
           ></el-avatar>
         </div>
         <div class="aside">
-          <div class="label">{{ item.uid }} {{ new Date(item.time).toLocaleTimeString("zh-CN") }}</div>
+          <div class="label">
+            {{ item.uid }} {{ new Date(item.time).toLocaleTimeString("zh-CN") }}
+          </div>
           <div class="text">
             <p>{{ item.text }}</p>
           </div>
@@ -77,7 +79,7 @@ export default {
         time: Date.now(),
         text: this.textarea,
       });
-      this.textarea = ""
+      this.textarea = "";
     },
   },
 };
@@ -89,6 +91,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+  height: 50%;
 
   .chat-window {
     flex: 1;
