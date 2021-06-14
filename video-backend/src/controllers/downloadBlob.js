@@ -12,7 +12,7 @@ export default {
       .input(audioFile["path"])
       .format("avi")
       .output(
-        path.join(__dirname, "/assets/upload/" + Date.now().toString() + ".avi")
+        path.join(__dirname, "../../assets/upload/" + Date.now().toString() + ".avi")
       )
       .inputOptions([
         "-y",
