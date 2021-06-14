@@ -1,5 +1,5 @@
 <template>
-  <div class="canvasContainer">
+  <div class="canvasContainer" v-show="!stopCamera">
     <canvas
       height="200px"
       id="jeeFaceFilterCanvas"
@@ -43,7 +43,8 @@ export default {
       formData:null,
       screenStream:null,
       title:'',
-      imageFile:null
+      imageFile:null,
+      stopCamera: false
     };
   },
   watch:{
@@ -130,21 +131,31 @@ export default {
         case 0:
           this.muteCamera();
           faceRender.main();
+          this.stopCamera = false
           break;
         case 1:
           this.muteCamera();
           faceDogRender.main();
+          this.stopCamera = false
           break;
         case 2:
           this.muteCamera();
           faceFoxRender.main();
+          this.stopCamera = false
           break;
       }
     },
-    muteCamera() {
-      faceRender.destroy();
-      faceDogRender.destroy();
-      faceFoxRender.destroy();
+    muteCamera(flag) {
+      if (!flag){
+        this.stopCamera = true
+        faceRender.destroy();
+        faceDogRender.destroy();
+        faceFoxRender.destroy();
+      }else{
+        this.stopCamera = false
+        this.changeRender(0)
+      }
+
     },
   },
 };

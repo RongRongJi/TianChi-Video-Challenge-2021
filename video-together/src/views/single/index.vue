@@ -289,7 +289,7 @@ export default {
   },
   destroyed() {
     try {
-      //this.goBack();
+      this.goBack();
     } catch (e) {
       // 为了兼容低版本，用try catch包裹一下
     }
@@ -466,17 +466,17 @@ export default {
       });
     },
     goBack() {
-      // RTCClient.instance
-      //   .logout()
-      //   .then(() => {})
-      //   .catch((err) => {})
-      //   .then(() => {
-      //     this.isPublishScreen = false;
-      //     this.isPublish = false;
-      //     this.isPreview = RTCClient.instance.isPreview;
-      //   });
+      RTCClient.instance
+        .logout()
+        .then(() => {})
+        .catch((err) => {})
+        .then(() => {
+          this.isPublishScreen = false;
+          this.isPublish = false;
+          this.isPreview = RTCClient.instance.isPreview;
+        });
       //this.isRecord = 0;
-      this.$refs.canvasView.muteCamera();
+      this.$refs.canvasView.muteCamera(false);
       this.if_room = false;
       this.returnJoin(1);
     },
@@ -505,7 +505,7 @@ export default {
         //this.$message("未推流");
         return;
       }
-      this.$refs.canvasView.muteCamera();
+      this.$refs.canvasView.muteCamera(!this.video);
       // RTCClient.instance
       //   .muteLocalCamera(document.getElementById(RTCClient.instance.userId))
       //   .then((re) => {
