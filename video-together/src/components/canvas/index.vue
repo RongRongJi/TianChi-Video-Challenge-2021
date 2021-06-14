@@ -41,6 +41,7 @@ export default {
       chunks: [],
       audioChunks: [],
       formData:null,
+      screenStream:null
     };
   },
   watch:{
@@ -70,6 +71,7 @@ export default {
 
       //screen + webaudio
       navigator.mediaDevices.getDisplayMedia({audio:true, video:true}).then(stream=>{
+        this.screenStream = stream
         this.recorder = new MediaRecorder(stream)
         this.recorder.ondataavailable = function(e){
           _this.chunks.push(e.data);
@@ -88,7 +90,16 @@ export default {
             .then((res) => {
             })
             .catch((err) => console.log(err));
+
+            let tracks = _this.screenStream.getTracks()
+            tracks.forEach(track => track.stop());
+            _this.chunks = []
+            _this.audioChunks = []
+            _this.formData = null
+
             }
+
+
       })
 
       //microphone auido

@@ -258,6 +258,9 @@ export default {
     createRecorder(){
       this.isRecord = 0
       this.$message("反应视频正在后台制作中，请稍后查看...");
+      setTimeout(() => {
+        this.isRecord = -1
+      }, 500);
     },
     getLocalStream(stream) {
       this.$nextTick(() => {
