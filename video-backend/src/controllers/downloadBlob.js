@@ -15,7 +15,7 @@ export default {
     const reader = fs.createReadStream(imageFile.path);
     const upStream = fs.createWriteStream(imgPath)
     reader.pipe(upStream)
-    const aviPath = "../../assets/upload/" + currentTime + ".avi"
+    const aviPath = "../../assets/upload/" + currentTime + ".mp4"
 
     fs.readFile('assets/reaction.json', function(err, data){
         if(err){
@@ -26,7 +26,7 @@ export default {
         reaction.push({
             "title": title,
             "image": 'assets/resources/'+currentTime+'.jpg',
-            "video": 'assets/upload/'+currentTime+'.avi'
+            "video": 'assets/upload/'+currentTime+'.mp4'
         })
         let str = JSON.stringify(reaction)
         fs.writeFile('assets/reaction.json', str, function(err){
@@ -39,7 +39,7 @@ export default {
     ffmpeg()
       .input(videoFile["path"])
       .input(audioFile["path"])
-      .format("avi")
+      .format("mp4")
       .output(
         path.join(__dirname, aviPath)
       )
