@@ -499,12 +499,12 @@ export default {
   flex-wrap: wrap;
   width: 90%;
   //min-width: 1200px;
-  justify-content: space-between;
+  justify-content: flex-start;
 
   .content {
     width: 28%;
     height: auto;
-    margin: 0 0 20px 0;
+    margin: 0 40px 20px 0;
     cursor: pointer;
 
     .el-image {
