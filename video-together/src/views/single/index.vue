@@ -342,6 +342,7 @@ export default {
           .catch((err) => {
             this.$message(err.message);
           });
+
       } else {
         RTCClient.instance
           .unPublish()
@@ -359,6 +360,10 @@ export default {
                   .then((e) => {
                     console.log("publish success", e);
                     this.isPublish = true;
+                    if(this.isSilence){
+                      console.log("now let's silence!")
+                      RTCClient.instance.muteLocalMic(true)
+                    }
                   })
                   .catch((e) => {
                     console.log("publish failed", e);
@@ -371,6 +376,7 @@ export default {
           .catch((e) => {
             console.log("unPublish failed", e);
           });
+
       }
     },
     // 注册回调
