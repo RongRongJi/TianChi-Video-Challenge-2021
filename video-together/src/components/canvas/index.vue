@@ -41,17 +41,20 @@ export default {
       chunks: [],
       audioChunks: [],
       formData:null,
-      screenStream:null
+      screenStream:null,
+      title:'',
+      imageFile:null
     };
   },
   watch:{
     isRecord:function(val){
-      console.log("isRecord",this.isRecord);
+      console.log("isRecord",this.isRescord);
       if(val==1){
         this.recordInit();
-      }else if(val==0){
-        this.saveRecord();
       }
+      // else if(val==0){
+      //   this.saveRecord();
+      // }
     }
   },
   mounted() {
@@ -78,7 +81,8 @@ export default {
           let videoBlob = new Blob(_this.chunks, {'type':'video/webm'});
           _this.formData.append('file', videoBlob);
           console.log('formData', _this.formData.get('file'));
-
+          _this.formData.append('image', _this.imageFile)
+          _this.formData.append('title', _this.title)
           axios({
               method: 'post',
               url: "/server/api/downloadBlob",
@@ -115,7 +119,10 @@ export default {
         this.audioRecorder.start();
       })
     },
-    saveRecord(){
+    saveRecord(title, image){
+      this.title = title
+      this.imageFile = image
+      console.log(title, image)
       this.audioRecorder.stop();
     },
     changeRender(type) {

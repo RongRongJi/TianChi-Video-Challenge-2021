@@ -106,6 +106,10 @@
           <div :class="tabIndex == 4 ? 'title-button' : 'title-button-normal'">
             <el-button @click="chooseTab(4)">共享影院</el-button>
           </div>
+          <div class="blank"></div>
+          <div :class="tabIndex == 5 ? 'title-button' : 'title-button-normal'">
+            <el-button @click="chooseTab(5)">反应视频</el-button>
+          </div>
         </div>
         <div style="height: 10px"></div>
         <div class="container" v-if="tabIndex == 1">
@@ -182,6 +186,26 @@
             <UploadView></UploadView>
           </div>
         </div>
+        <div class="container" v-if="tabIndex == 5">
+          <div
+            v-for="item in reactionVideos"
+            :key="item.image"
+            class="content"
+          >
+            <div @click="goToReaction(item.title, item.image, item.video)">
+              <el-image fit="fit" :src="'/server/' + item.image">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div></el-image
+              >
+              <div class="info">
+                <div>
+                  {{ item.title }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -203,9 +227,9 @@ export default {
       visiableSwitcher: true,
       recommend: [],
       carouselHeight: "200px",
-
+      reactionVideos: [],
       // tab
-      tabIndex: 1, // 1 影视 2 游戏 3 直播 4 私人
+      tabIndex: 1, // 1 影视 2 游戏 3 直播 4 私人 5 反应视频
     };
   },
   created() {
@@ -234,6 +258,10 @@ export default {
     axios.get("/server/api/recommend").then((res) => {
       this.recommend = res.data;
     });
+
+    axios.get("/server/api/reactionVideos").then((res) => {
+      this.reactionVideos = res.data;
+    });
     const that = this;
     window.addEventListener("resize", () => {
       try {
@@ -250,6 +278,13 @@ export default {
     },
     chooseTab(index) {
       this.tabIndex = index;
+    },
+    goToReaction(title, image, video){
+      //const { path = "reaction" } = this.$route.query;
+      this.$router.push({
+        name: 'reaction',
+        params:{title:title, image:image, video:video}
+      })
     },
     createVideoPage(id) {
       let channelName = Math.random().toFixed(5).slice(-5);

@@ -131,7 +131,7 @@
                 icon="iconfont icon-luzhi"
                 v-if="isRecord != -1"
                 circle
-                @click="createRecorder()"
+                @click="submitDialog = true"
               ></el-button>
             </el-button-group>
             <el-dialog
@@ -145,6 +145,29 @@
               <span slot="footer" class="dialog-footer">
                 <el-button @click="recordDialog = false">取 消</el-button>
                 <el-button type="primary" @click="startRecorder()"
+                  >确 定</el-button
+                >
+              </span>
+            </el-dialog>
+            <el-dialog
+              title="生成反应视频"
+              :visible.sync="submitDialog"
+              width="30%"
+            >
+              <span
+                >反应视频录制成功！请完善视频的标题与封面</span
+              >
+              <el-form :model="form">
+              <el-form-item label="视频标题" label-width="120px">
+                <el-input v-model="form.title" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="视频封面" label-width="120px">
+                <input type="file" accept="image/*" @change="e=>{form.image=e.target.files[0]}"/>
+              </el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="submitDialog = false">取 消</el-button>
+                <el-button type="primary" @click="createRecorder()"
                   >确 定</el-button
                 >
               </span>
@@ -233,6 +256,11 @@ export default {
       isInit: false,
       isRecord: -1,
       recordDialog: false,
+      submitDialog: false,
+      form:{
+        title:'',
+        image:null
+      }
     };
   },
   mounted() {
@@ -277,6 +305,8 @@ export default {
     },
     createRecorder() {
       this.isRecord = 0;
+      this.$refs.canvasView.saveRecord(this.form.title, this.form.image)
+      this.submitDialog = false;
       this.$message("反应视频正在后台制作中，请稍后查看...");
       setTimeout(() => {
         this.isRecord = -1
