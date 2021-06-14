@@ -576,7 +576,7 @@ export default {
 .videochat-window {
   display: flex;
   flex-direction: column;
-  max-height: 40%;
+  max-height: 60%;
   overflow: hidden auto;
 
   .main-window {
