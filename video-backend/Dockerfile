@@ -1,6 +1,13 @@
-FROM node:lts-alpine
+FROM jrottenberg/ffmpeg:3-vaapi
 
-ENV EXPOSE_PORT 3000
+RUN apt-get update
+
+RUN apt-get install -y nodejs  \
+    && apt install -y npm 
+
+RUN npm install -g npm
+# RUN apt-get install -y curl && npm cache clean -f && npm install -g n && n stable
+
 ENV TZ=Asia/Shanghai
 
 WORKDIR /app
