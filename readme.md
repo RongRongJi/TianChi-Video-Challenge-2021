@@ -34,12 +34,13 @@
 
 从视频平台的发展历史来看，早期的视频平台只提供了文字评论功能，观众在观看视频后，可以在视频下方留下评论，再后来由评论进化的“弹幕”大行其道，现在几乎成为了所有视频平台的标配。在评论和弹幕的背后，隐藏的是观众群体所需的认同感和分享欲，在可预见的未来，随着视频云技术的普及，“反应视频”这种更加生动的互动形式势必会被广泛应用。而观众在观看视频的同时，实时分享自己的反应，也许会成为一个新的趋势。
 
+详细比赛攻略 https://tianchi.aliyun.com/forum/postDetail?postId=246884
+
 ## 赛事资料
 
-1. 本项目比赛攻略 https://tianchi.aliyun.com/forum/postDetail?postId=246884
-2. 获奖名单 https://tianchi.aliyun.com/competition/entrance/531868/rankingList
-3. 阿里云rtc技术 https://www.aliyun.com/product/rtc
-4. 阿里云视频点播技术 https://www.aliyun.com/product/vod
+1. 获奖名单 https://tianchi.aliyun.com/competition/entrance/531868/rankingList
+2. 阿里云rtc技术 https://www.aliyun.com/product/rtc
+3. 阿里云视频点播技术 https://www.aliyun.com/product/vod
 
 ## 运行说明
 
